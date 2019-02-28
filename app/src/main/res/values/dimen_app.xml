@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--导航栏高度-->
+    <dimen name="navigation_bar_height">58dp</dimen>
+    <!--字体大小-->
+    <!--初号-->
+    <dimen name="font_size_mm">12sp</dimen>
+    <dimen name="font_size_m">12dp</dimen>
+    <!--中号字体大小-->
+    <dimen name="font_size_h">16dp</dimen>
+    <!--标题导航栏字体大小-->
+    <dimen name="font_size_x">18dp</dimen>
+    <!--标题信息框高度-->
+    <dimen name="title">44dp</dimen>
+    <!--按钮高度-->
+    <dimen name="btn_height">35dp</dimen>
+    <!--通用高度-->
+    <dimen name="height_m">32dp</dimen>
+    <dimen name="height_x">48dp</dimen>
+    <dimen name="height_mm">24dp</dimen>
+    <dimen name="height_0dp">0.5dp</dimen>
+    <dimen name="height_1dp">1dp</dimen>
+    <dimen name="height_8dp">8dp</dimen>
+    <dimen name="margin_top_15">15dp</dimen>
+    <!--个人中心-->
+    <!--个人中心选项卡按钮高度-->
+    <dimen name="me_btn_height">70dp</dimen>
+    <!--个人中心变局-->
+    <dimen name="me_margin">12dp</dimen>
+    <!--圆角-->
+    <dimen name="radius">5dp</dimen>
+    <!--右边箭头间距-->
+    <dimen name="me_arrow_right">15dp</dimen>
+    <!--个人中心按钮内部边距-->
+    <dimen name="me_left_btn_padding">20dp</dimen>
+
+    <!--输入框高度-->
+    <dimen name="input_layout_height">48dp</dimen>
+    <!--输入框Padding-->
+    <dimen name="padding_input_layout_left">40dp</dimen>
+    <!--容器边距-->
+    <dimen name="padding_left">15dp</dimen>
+    <dimen name="padding_right">15dp</dimen>
+    <dimen name="layout_margin_left">0dp</dimen>
+    <dimen name="layout_margin_right">0dp</dimen>
+    <dimen name="margin_top">15dp</dimen>
+    <dimen name="padding">10dp</dimen>
+    <dimen name="margin_5dp">5dp</dimen>
+    <dimen name="btn_margin_left">15dp</dimen>
+    <dimen name="margin_left">15dp</dimen>
+    <dimen name="margin_right">15dp</dimen>
+
+    <!--基于1080做参照-->
+    <dimen name="home_page_txt_12">12dp</dimen>
+    <dimen name="home_page_txt_13">13dp</dimen>
+    <dimen name="home_page_txt_14">14dp</dimen>
+    <dimen name="home_page_txt_16">16dp</dimen>
+    <dimen name="home_page_txt_20">20dp</dimen>
+    <dimen name="home_page_txt_22">22dp</dimen>
+    <dimen name="home_page_txt_18">18dp</dimen>
+    <dimen name="home_page_txt_30">30dp</dimen>
+    <dimen name="home_page_txt_38">38dp</dimen>
+    <dimen name="home_page_txt_26">26dp</dimen>
+    <dimen name="home_page_txt_45">45dp</dimen>
+    <dimen name="home_page_txt_50">50dp</dimen>
+    <dimen name="home_page_txt_60">55dp</dimen>
+    <dimen name="home_page_txt_65">65dp</dimen>
+    <dimen name="home_page_txt_75">75dp</dimen>
+    <dimen name="home_page_txt_80">80dp</dimen>
+    <dimen name="home_page_txt_85">85dp</dimen>
+
+</resources>

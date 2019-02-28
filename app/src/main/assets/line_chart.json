@@ -1,0 +1,231 @@
+{
+  "ERRORNO": 0,
+  "GRID0": {
+    "code": 0,
+    "message": "SUCCESS",
+    "result": {
+      "compositeIndexShanghai": [
+        {
+          "rate": "1000",
+          "tradeDate": "20180502"
+        },
+        {
+          "rate": "3000",
+          "tradeDate": "20180503"
+        },
+        {
+          "rate": "5000",
+          "tradeDate": "20180504"
+        },
+        {
+          "rate": "5200",
+          "tradeDate": "20180507"
+        },
+        {
+          "rate": "1220",
+          "tradeDate": "20180508"
+        },
+        {
+          "rate": "3400",
+          "tradeDate": "20180509"
+        },
+        {
+          "rate": "2200",
+          "tradeDate": "20180510"
+        },
+        {
+          "rate": "5310",
+          "tradeDate": "20180511"
+        },
+        {
+          "rate": "2258",
+          "tradeDate": "20180514"
+        },
+        {
+          "rate": "6510",
+          "tradeDate": "20180515"
+        },
+        {
+          "rate": "3200",
+          "tradeDate": "20180516"
+        },
+        {
+          "rate": "2800",
+          "tradeDate": "20180517"
+        },
+        {
+          "rate": "2200",
+          "tradeDate": "20180518"
+        },
+        {
+          "rate": "2900",
+          "tradeDate": "20180521"
+        },
+        {
+          "rate": "4320",
+          "tradeDate": "20180522"
+        },
+        {
+          "rate": "800",
+          "tradeDate": "20180523"
+        },
+        {
+          "rate": "6400",
+          "tradeDate": "20180524"
+        },
+        {
+          "rate": "0",
+          "tradeDate": "20180525"
+        }
+      ],
+      "clientAccumulativeRate": [
+        {
+          "tradeDate": "20180502",
+          "value": 7000
+        },
+        {
+          "tradeDate": "20180503",
+          "value": 5000
+        },
+        {
+          "tradeDate": "20180504",
+          "value": 3000
+        },
+        {
+          "tradeDate": "20180507",
+          "value": 2800
+        },
+        {
+          "tradeDate": "20180508",
+          "value": 6780
+        },
+        {
+          "tradeDate": "20180509",
+          "value": 4600
+        },
+        {
+          "tradeDate": "20180510",
+          "value": 5800
+        },
+        {
+          "tradeDate": "20180511",
+          "value": 1900
+        },
+        {
+          "tradeDate": "20180514",
+          "value": 4500
+        },
+        {
+          "tradeDate": "20180515",
+          "value": 2200
+        },
+        {
+          "tradeDate": "20180516",
+          "value": 6800
+        },
+        {
+          "tradeDate": "20180517",
+          "value": 7000
+        },
+        {
+          "tradeDate": "20180518",
+          "value": 5800
+        },
+        {
+          "tradeDate": "20180521",
+          "value": 5100
+        },
+        {
+          "tradeDate": "20180522",
+          "value": 3680
+        },
+        {
+          "tradeDate": "20180523",
+          "value": 7200
+        },
+        {
+          "tradeDate": "20180524",
+          "value": 1600
+        },
+        {
+          "tradeDate": "20180525",
+          "value": 8000
+        }
+      ],
+      "compositeIndexShenzhen": [
+        {
+          "rate": "8000",
+          "tradeDate": "20180502"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180503"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180504"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180507"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180508"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180509"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180510"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180511"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180514"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180515"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180516"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180517"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180518"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180521"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180522"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180523"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180524"
+        },
+        {
+          "rate": "8000",
+          "tradeDate": "20180525"
+        }
+      ]
+    }
+  }
+}

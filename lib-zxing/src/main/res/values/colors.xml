@@ -1,0 +1,61 @@
+<resources>
+
+    <color name="cc">#59a9ff</color>
+
+    <color name="bg_color">#EDEDED</color>
+    <color name="contents_text">#ff000000</color>
+    <color name="encode_view">#ffffffff</color>
+    <color name="help_button_view">#ffcccccc</color>
+    <color name="help_view">#ff404040</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="result_image_border">#ffffffff</color>
+    <color name="result_minor_text">#ffc0c0c0</color>
+    <color name="result_points">#c000ff00</color>
+    <color name="result_text">#ffffffff</color>
+    <color name="result_view">#b0000000</color>
+    <color name="sbc_header_text">#ff808080</color>
+    <color name="sbc_header_view">#ffffffff</color>
+    <color name="sbc_list_item">#fffff0e0</color>
+    <color name="sbc_layout_view">#ffffffff</color>
+    <color name="sbc_page_number_text">#ff000000</color>
+    <color name="sbc_snippet_text">#ff4b4b4b</color>
+    <color name="share_text">#ff000000</color>
+    <color name="share_view">#ffffffff</color>
+    <color name="status_view">#50000000</color>
+    <color name="status_text">#ffffffff</color>
+    <color name="transparent">#00000000</color>
+    <color name="viewfinder_frame">#ff000000</color>
+    <color name="viewfinder_laser">#ffff0000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="header">#58567D</color>
+    <color name="grgray">#686868</color>
+    <color name="colorPrimary" >#FFFFFFFF</color >
+    <color name="colorPrimaryDark" >#FFFFFFFF</color >
+    <color name="colorAccent" >#DCDCDC</color >
+
+    <color name="colorGray">#e4e2c9</color>
+    <color name="colorBlue">#0000CD</color>
+    <color name="colorTrans">#00000000</color>
+    <color name="green">#3cdc87</color>
+
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="red">#F43936</color>
+    <color name="orange">#ff8c00</color>
+    <color name="_67b7cb">#67b7cb</color>
+    <color name="_8b67b7cb">#8b67b7cb</color>
+    <color name="background">#121b24</color>
+    <drawable name="font_white">#FFFFFFFF</drawable>
+    <drawable name="font_67b7cb">#67b7cb</drawable>
+    <color name="ff">#FF0000</color>
+    <color name="zeroColor">#00ffffff</color>
+    <color name="stop_info">#121b24</color>
+    <color name="app_background_color_1">#f8f8ff</color>
+    <color name="app_background_color_2">#fffff0</color>
+    <color name="app_background_color_3">#fffaf0</color>
+    <color name="app_background_color_4">#f0fff0</color>
+
+
+
+
+</resources>

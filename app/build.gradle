@@ -1,0 +1,144 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
+    defaultConfig {
+        applicationId "com.guidemachine"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi-v7a' , 'armeabi','x86', 'armeabi', 'x86_64', 'arm64-v8a'
+        }
+        multiDexEnabled true
+    }
+//    useLibrary 'org.apache.http.legacy'
+//    buildTypes {
+//        release {
+//            minifyEnabled false
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//        }
+//    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    signingConfigs {
+
+        def alias = "key0"
+        def password = "tome123456"
+        def filePath = "D:\\guidemachine.jks"  //签名文件路径 如：../faceprint.jks
+
+        debug {
+            keyAlias alias
+            keyPassword password
+            storeFile file(filePath)
+            storePassword(password)
+        }
+        release {
+            keyAlias alias
+            keyPassword password
+            storeFile file(filePath)
+            storePassword(password)
+        }
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+            debuggable true
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable false
+            jniDebuggable false
+        }
+    }
+
+}
+
+dependencies {
+//    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation 'com.android.support:appcompat-v7:27.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:support-v4:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    //retrofit依赖
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+    //rxJava与rxandroid依赖
+    implementation 'io.reactivex:rxjava:1.2.0'
+    implementation 'io.reactivex:rxandroid:1.2.0'
+    implementation 'com.android.support:design:27.1.0'
+    //butterknife依赖
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation files('libs/arcsoft_face.jar')
+    implementation files('libs/BaiduTraceSDK_v3_0_7.jar')
+    implementation files('libs/BaiduLBS_Android.jar')
+    implementation 'com.github.bumptech.glide:glide:4.7.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    //glide图片加载框架
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+
+    //CardView卡片布局
+    implementation 'com.android.support:cardview-v7:27.1.0'
+    //环信sdk相关
+//    implementation 'com.google.android.gms:play-services-gcm:11.4.0'
+    implementation 'com.hyphenate:hyphenate-sdk:3.5.2'
+    // 添加依赖模块
+    implementation project(':easeui')
+    implementation 'com.parse:parse-android:1.13.1'
+    implementation 'com.android.support:multidex:1.0.1'
+    //七牛云存储
+    implementation 'pub.devrel:easypermissions:0.4.3'
+    implementation 'com.qiniu:qiniu-android-sdk:7.3.+'
+    implementation 'com.qiniu:happy-dns:0.2.13'
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation 'com.google.code.gson:gson:2.8.1'
+    //图片轮播图
+    implementation 'com.bigkoo:convenientbanner:2.0.5'
+    //EventBus 跨组件发送消息
+    implementation 'org.greenrobot:eventbus:3.0.0'
+    //flowlayout
+    implementation 'com.zhy:flowlayout-lib:1.0.3'
+    //fastjson解析
+    implementation 'com.alibaba:fastjson:1.2.49'
+    //引入第三方折线图libs  https://blog.csdn.net/ww897532167/article/details/74129478
+    implementation project(':MPChartLib')
+    //引入第三方日历 https://github.com/prolificinteractive/material-calendarview
+    implementation 'com.prolificinteractive:material-calendarview:1.4.2'
+    //zxing二维码
+    implementation project(':lib-zxing')
+    //人脸检测ui
+    implementation project(path: ':faceplatform-ui')
+    //权限
+    implementation 'pub.devrel:easypermissions:1.3.0'
+    //图片伸缩
+    implementation 'com.github.chrisbanes.photoview:library:+'
+
+}

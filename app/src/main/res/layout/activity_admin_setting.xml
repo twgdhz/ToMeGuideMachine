@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        style="@style/new_title"
+        android:background="@color/text_color61">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@mipmap/ic_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_center"
+            style="@style/title_text_view"
+            android:text="设置"
+            android:textColor="@color/white"
+            android:textSize="@dimen/home_page_txt_16" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/adaptive_25dp"
+        android:paddingLeft="@dimen/adaptive_25dp"
+        android:paddingTop="@dimen/adaptive_25dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@mipmap/ic_admin_head" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_25dp"
+            android:layout_marginTop="@dimen/adaptive_15dp"
+            android:text="超级管理员"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/text_color53" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_clear_cache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/adaptive_15dp"
+        android:paddingTop="@dimen/adaptive_15dp"
+        android:paddingLeft="@dimen/adaptive_25dp"
+        android:layout_marginTop="@dimen/adaptive_15dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_admin_cache" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_28dp"
+            android:text="清理缓存"
+            android:layout_weight="1"
+            android:textColor="@color/text_color53" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/adaptive_25dp"
+            android:background="@mipmap/ic_more" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_log_out"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_5dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/adaptive_15dp"
+        android:paddingLeft="@dimen/adaptive_25dp"
+        android:paddingTop="@dimen/adaptive_15dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/ic_admin_loginout" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_25dp"
+            android:text="退出登录"
+            android:layout_weight="1"
+            android:textColor="@color/text_color53" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/adaptive_25dp"
+            android:background="@mipmap/ic_more" />
+    </LinearLayout>
+
+</LinearLayout>

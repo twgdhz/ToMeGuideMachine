@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--个人资料底部按钮选项卡默认颜色-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 圆角 -->
+    <corners android:radius="3dp"/>
+    <stroke android:color="@color/text_color30" android:width="@dimen/height_1dp"/>
+</shape>

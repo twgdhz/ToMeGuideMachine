@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.guide.GuideModifyPwdActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        style="@style/new_title"
+        android:background="@color/withe">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@mipmap/ic_guide_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_center"
+            style="@style/title_text_view"
+            android:text="修改密码"
+            android:textColor="@color/font_lightblack"
+            android:textSize="@dimen/home_page_txt_16" />
+
+        <RelativeLayout
+            android:id="@+id/rl_right"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_title"
+        android:orientation="vertical">
+
+        <View
+            style="@style/divider_line"
+            android:layout_height="@dimen/height_1dp"
+            android:background="@color/divider_line" />
+
+        <View
+            style="@style/divider_line"
+            android:background="@color/divider_line_wide" />
+
+        <View
+            style="@style/divider_line"
+            android:layout_height="@dimen/height_1dp"
+            android:background="@color/divider_line" />
+        <RelativeLayout
+            style="@style/layout_login"
+            android:layout_height="@dimen/home_page_txt_60"
+            android:background="@color/white">
+
+            <com.guidemachine.ui.view.ContainsEmojiEditText
+                android:id="@+id/et_origin_pwd"
+                style="@style/edit_text_login"
+                android:background="@drawable/edit_bg"
+                android:drawablePadding="5dp"
+                android:hint="@string/modify_new_pwd"
+                android:inputType="textPassword"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/margin_left"
+                android:textColor="@color/card_a"
+                android:textColorHint="@color/card_a"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            style="@style/layout_login"
+            android:layout_height="@dimen/home_page_txt_60"
+            android:background="@color/white">
+
+            <com.guidemachine.ui.view.ContainsEmojiEditText
+                android:id="@+id/et_new_pwd"
+                style="@style/edit_text_login"
+                android:background="@drawable/edit_bg"
+                android:drawablePadding="5dp"
+                android:hint="@string/modify_new_pwd"
+                android:inputType="textPassword"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/margin_left"
+                android:textColor="@color/card_a"
+                android:textColorHint="@color/card_a"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            style="@style/layout_login"
+            android:layout_height="@dimen/home_page_txt_60"
+            android:background="@color/white">
+
+            <com.guidemachine.ui.view.ContainsEmojiEditText
+                android:id="@+id/et_ensure_pwd"
+                style="@style/edit_text_login"
+                android:background="@drawable/edit_bg"
+                android:drawablePadding="5dp"
+                android:hint="@string/modify_ensure_pwd"
+                android:inputType="textPassword"
+                android:maxLength="18"
+                android:maxLines="1"
+                android:paddingLeft="@dimen/margin_left"
+                android:textColor="@color/card_a"
+                android:textColorHint="@color/card_a"
+                android:textSize="14dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_ensure"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginRight="@dimen/margin_right"
+            android:layout_marginTop="@dimen/home_page_txt_26"
+            android:background="@color/text_color58"
+            android:gravity="center"
+            android:text="完成"
+            android:textColor="@color/white"
+            android:textSize="@dimen/home_page_txt_18" />
+    </LinearLayout>
+</RelativeLayout>

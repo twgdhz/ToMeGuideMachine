@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.ShopDetailActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        style="@style/new_title">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@mipmap/ic_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_center"
+            style="@style/title_text_view"
+            android:text=""
+            android:textSize="@dimen/home_page_txt_16" />
+    </RelativeLayout>
+
+ <ScrollView
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+     <LinearLayout
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="vertical">
+         <RelativeLayout
+             android:layout_width="match_parent"
+             android:layout_height="180dp">
+
+             <ImageView
+                 android:id="@+id/img_shop_top_bg"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:background="@mipmap/ic_home_reproduction" />
+
+             <ImageView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentBottom="true"
+                 android:background="@mipmap/ic_banner_bottom" />
+         </RelativeLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_margin="@dimen/margin_top"
+             android:background="@mipmap/ic_address_bg"
+             android:orientation="horizontal">
+
+             <LinearLayout
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="1"
+                 android:orientation="vertical">
+
+                 <LinearLayout
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:orientation="horizontal">
+
+                     <TextView
+
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="@dimen/margin_5dp"
+                         android:layout_marginTop="@dimen/margin_5dp"
+                         android:text="@string/address"
+                         android:textColor="@color/text_color5"
+                         android:textSize="@dimen/home_page_txt_14" />
+
+                     <TextView
+                         android:id="@+id/tv_address"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="@dimen/margin_5dp"
+                         android:layout_marginTop="@dimen/margin_5dp"
+                         android:text="成都市武侯区望江楼30号"
+                         android:textColor="@color/text_color5"
+                         android:textSize="@dimen/home_page_txt_14" />
+                 </LinearLayout>
+
+                 <TextView
+                     android:id="@+id/tv_distance"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginLeft="@dimen/margin_5dp"
+                     android:layout_marginTop="@dimen/margin_5dp"
+                     android:text="距离您100米"
+                     android:textColor="@color/text_color8" />
+             </LinearLayout>
+
+             <TextView
+                 android:id="@+id/tv_go_there"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_vertical"
+                 android:layout_marginRight="@dimen/margin_top"
+                 android:text="到这去"
+                 android:textColor="@color/text_color9" />
+
+         </LinearLayout>
+
+         <android.support.v7.widget.RecyclerView
+             android:id="@+id/ry_good_list"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+     </LinearLayout>
+ </ScrollView>
+</LinearLayout>

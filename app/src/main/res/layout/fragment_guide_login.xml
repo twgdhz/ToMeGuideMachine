@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/text_color57"
+    android:paddingLeft="@dimen/adaptive_30dp"
+    android:paddingRight="@dimen/adaptive_30dp"
+    tools:context=".ui.guide.fragment.GuideLoginFragment">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cs_guide_pwd_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl_name"
+            style="@style/layout"
+            android:layout_marginTop="@dimen/adaptive_25dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/et_unser_name"
+                style="@style/edit_text_login"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/ic_guide_login_user"
+                android:drawablePadding="5dp"
+                android:hint="@string/guide_user_name_hint"
+                android:imeOptions="actionUnspecified"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textColor="@color/line_color_gray_deep"
+                android:textColorHint="@color/line_color_gray_deep"
+                android:textSize="14dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_pwd"
+            style="@style/layout"
+            android:layout_marginTop="@dimen/adaptive_25dp"
+            app:layout_constraintTop_toBottomOf="@+id/rl_name">
+
+            <EditText
+                android:id="@+id/et_password"
+                style="@style/edit_text_login"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/ic_guide_login_pwd"
+                android:drawablePadding="5dp"
+                android:hint="@string/guide_pwd_hint"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textColor="@color/line_color_gray_deep"
+                android:textColorHint="@color/line_color_gray_deep"
+                android:textSize="14dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_guide_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_25dp"
+            android:layout_marginRight="@dimen/adaptive_25dp"
+            android:layout_marginTop="@dimen/adaptive_25dp"
+            android:background="@drawable/bg_guide_login"
+            android:gravity="center"
+            android:paddingBottom="@dimen/adaptive_10dp"
+            android:paddingTop="@dimen/adaptive_10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_pwd">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登录"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_code_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_top_15"
+            android:paddingTop="@dimen/margin_top_15"
+            android:text="@string/guide_phone_login"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="@+id/ll_guide_login"
+            app:layout_constraintTop_toBottomOf="@+id/ll_guide_login" />
+    </android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cs_guide_phone_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rl_account_name"
+            style="@style/layout"
+            android:layout_marginTop="@dimen/adaptive_25dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/et_account__name"
+                style="@style/edit_text_login"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/ic_guide_login_user"
+                android:drawablePadding="5dp"
+                android:hint="@string/guide_user_name_hint"
+                android:imeOptions="actionUnspecified"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textColor="@color/line_color_gray_deep"
+                android:textColorHint="@color/line_color_gray_deep"
+                android:textSize="14dp" />
+            <TextView
+                android:id="@+id/tv_get_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/padding"
+                android:text="@string/get_code"
+                android:textSize="@dimen/adaptive_15dp"
+                android:layout_centerInParent="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/text_color56" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_code"
+            style="@style/layout"
+            android:layout_marginTop="@dimen/adaptive_25dp"
+            app:layout_constraintTop_toBottomOf="@+id/rl_account_name">
+
+            <EditText
+                android:id="@+id/et_code"
+                style="@style/edit_text_login"
+                android:background="@color/white"
+                android:drawableLeft="@mipmap/ic_guide_login_code"
+                android:drawablePadding="5dp"
+                android:hint="@string/guide_code_hint"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textColor="@color/line_color_gray_deep"
+                android:textColorHint="@color/line_color_gray_deep"
+                android:textSize="14dp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_guide_code_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_25dp"
+            android:layout_marginRight="@dimen/adaptive_25dp"
+            android:layout_marginTop="@dimen/adaptive_25dp"
+            android:background="@drawable/bg_guide_login"
+            android:gravity="center"
+            android:paddingBottom="@dimen/adaptive_10dp"
+            android:paddingTop="@dimen/adaptive_10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rl_code">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="登录"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_account_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_top_15"
+            android:paddingTop="@dimen/margin_top_15"
+            android:text="@string/guide_account_login"
+            android:textColor="@color/black"
+            app:layout_constraintLeft_toLeftOf="@+id/ll_guide_code_login"
+            app:layout_constraintTop_toBottomOf="@+id/ll_guide_code_login" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

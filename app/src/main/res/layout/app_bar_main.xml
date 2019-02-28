@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <FrameLayout
+        android:id="@+id/tb_fm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tb_rg" />
+
+    <RadioGroup
+        android:id="@+id/tb_rg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_bar_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/shape_navigation_bar"
+        android:orientation="horizontal"
+        android:paddingTop="2dp">
+
+        <RadioButton
+            android:id="@+id/rb_data_statistics"
+            style="@style/navigation_bar"
+            android:checked="true"
+            android:drawableTop="@drawable/btn_super_admin_bottom_data_statistics_navi"
+            android:text="数据统计"
+            android:textSize="@dimen/home_page_txt_12" />
+
+        <RadioButton
+            android:id="@+id/rb_service_provider"
+            style="@style/navigation_bar"
+            android:drawableTop="@drawable/btn_super_admin_bottom_service_provider_navi"
+            android:text="景区服务商"
+            android:textSize="@dimen/home_page_txt_12" />
+
+
+    </RadioGroup>
+</RelativeLayout>

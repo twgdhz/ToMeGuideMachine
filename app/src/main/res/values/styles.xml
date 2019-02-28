@@ -1,0 +1,159 @@
+<resources>
+
+    <!-- Base application theme. 如果缺少Base会出现preview不显示 -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <!--底部导航栏样式-->
+    <style name="navigation_bar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:button">@null</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@null</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/font_size_m</item>
+        <item name="android:textColor">@drawable/select_navigation_bar</item>
+    </style>
+    <style name="new_title">
+        <item name="android:layout_height">@dimen/title</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@color/text_color4</item>
+    </style>
+    <!--圆角的dialog样式-->
+    <style name="RoundCornerDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+    <style name="anim_menu_bottombar">
+        <item name="android:windowEnterAnimation">@anim/menu_bottombar_in</item>
+        <item name="android:windowExitAnimation">@anim/menu_bottombar_out</item>
+    </style>
+    <!--标题栏TextView,APP顶部-->
+    <style name="title_text_view">
+        <item name="android:textColor">@color/title_color</item>
+        <item name="android:textSize">@dimen/font_size_x</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+    <style name="divider_line">
+        <item name="android:background">@color/divider_line_wide</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">8dp</item>
+    </style>
+    <style name="customdialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    <style name="chat_room_menu_item_wrapper">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+    <style name="chat_room_menu_item_text_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">50dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+    </style>
+    <style name="chat_room_menu_item_splitter">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dip</item>
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:layout_marginRight">10dip</item>
+        <item name="android:background">#E6E6E6</item>
+    </style>
+    <!-- 时间轴 -->
+    <declare-styleable name="UnderLineLinearLayout">
+        <!--时间轴偏移值-->
+        <attr name="line_margin_side" format="dimension" />
+        <!--时间轴动态调整值-->
+        <attr name="line_dynamic_dimen" format="dimension" />
+        <!--线宽-->
+        <attr name="line_stroke_width" format="dimension" />
+        <!--线的颜色-->
+        <attr name="line_v_color" format="color" />
+        <!--点的大小-->
+        <attr name="point_size" format="dimension" />
+        <!--点的颜色-->
+        <attr name="point_color" format="color" />
+        <!--图标-->
+        <attr name="icon_src" format="reference" />
+        <!--时间轴的gravity-->
+        <!--the gravity of the timeline-->
+        <attr name="line_gravity">
+            <enum name="Left" value="2" />
+            <enum name="Right" value="4" />
+            <enum name="Middle" value="0" />
+            <enum name="Top" value="1" />
+            <enum name="Bottom" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <style name="layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_marginLeft">@dimen/padding_left</item>
+        <item name="android:layout_marginRight">@dimen/padding_right</item>
+        <item name="android:textColor">@color/line_color_gray_deep</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="edit_text_login">
+        <!--<item name="android:textCursorDrawable">@drawable/shape_text_cursor</item>-->
+        <item name="android:textSize">@dimen/font_size_h</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+    <style name="Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <!-- 自定义dialog的样式 -->
+    <style name="CustomDialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@drawable/bg_dialog_custom</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+    <style name="layout_login">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:textColor">@color/font_h</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/shape_card_content</item>
+    </style>
+    <style name="DefaultDialog" parent="android:style/Theme.Dialog">
+        <item name="android:background">#00000000</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextureView
+        android:id="@+id/texture_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
+    <com.guidemachine.face.widget.FaceRectView
+        android:id="@+id/face_rect_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <Switch
+        android:id="@+id/switch_liveness_detect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp"
+        android:text="@string/liveness_detect"
+        android:visibility="gone" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="@dimen/adaptive_15dp"
+        android:onClick="register"
+        android:background="@mipmap/ic_register_face"
+        android:visibility="gone"
+        android:text="@string/register" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_person"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:text="途咪地图人脸登录"
+        android:textColor="@color/withe"
+        android:textSize="@dimen/home_page_txt_18" />
+
+    <TextView
+        android:id="@+id/tv_login_failed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:text="登不上？用手机号试试"
+        android:layout_margin="@dimen/adaptive_15dp"
+        android:textColor="@color/withe"
+        android:visibility="gone"
+        android:textSize="@dimen/adaptive_21dp" />
+</FrameLayout>

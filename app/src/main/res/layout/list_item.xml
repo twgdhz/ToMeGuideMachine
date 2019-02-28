@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_item"
+    android:layout_width="match_parent"
+    android:layout_height="68dp"
+    android:background="@color/white"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="15dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/adaptive_3dp"
+        android:background="@mipmap/ic_item_fence" />
+
+
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/icon"
+        android:layout_alignLeft="@id/title"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/margin_top_15"
+        android:layout_toRightOf="@+id/icon"
+        android:text="1111"
+        android:textColor="@color/font_mx"
+        android:textSize="@dimen/home_page_txt_14" />
+
+    <TextView
+        android:id="@+id/tv_bind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_top_15"
+        android:layout_toLeftOf="@id/time"
+        android:textColor="@color/text_color58"
+        android:text="绑定"
+        android:textSize="@dimen/home_page_txt_14" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/margin_top_15"
+        android:textColor="@color/text_color58"
+        android:text="查看"
+        android:textSize="@dimen/home_page_txt_14" />
+
+</RelativeLayout>

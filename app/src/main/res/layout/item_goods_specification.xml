@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:danxx="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:id="@+id/ll_specification"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginTop="@dimen/margin_top"
+            android:text="@string/home_souvenir_color"
+            android:textColor="@color/text_color27"
+            android:textSize="@dimen/home_page_txt_14" />
+
+        <com.zhy.view.flowlayout.TagFlowLayout
+            android:id="@+id/tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginTop="@dimen/margin_top"
+            danxx:max_select="1"></com.zhy.view.flowlayout.TagFlowLayout>
+
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

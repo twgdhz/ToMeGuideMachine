@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_gray"
+    tools:context=".ui.guide.GuideMainActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        style="@style/new_title"
+        android:layout_height="200dp"
+        android:background="@color/title_tour_color">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="60dp"
+            android:layout_height="44dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_center"
+            style="@style/title_text_view"
+            android:layout_height="44dp"
+            android:text="设置"
+            android:textColor="@color/withe"
+            android:textSize="@dimen/home_page_txt_16" />
+    </RelativeLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="150dp">
+
+        <LinearLayout
+            android:id="@+id/ll_first"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_15dp"
+            android:layout_marginRight="@dimen/adaptive_15dp"
+            android:background="@color/withe"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_top"
+            android:paddingTop="@dimen/margin_top">
+
+            <LinearLayout
+                android:id="@+id/ll_emergency_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_guide_emergency_link" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:text="紧急联系人"
+                    android:textColor="@color/text_color52" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_job_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_guide_job_mode" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:text="工作模式"
+                    android:textColor="@color/text_color52" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_power_off"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_guide_off" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:text="设备关机"
+                    android:textColor="@color/text_color52" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_second"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_15dp"
+            android:layout_marginRight="@dimen/adaptive_15dp"
+            android:layout_marginTop="@dimen/adaptive_15dp"
+            android:background="@color/withe"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/margin_top"
+            android:paddingTop="@dimen/margin_top"
+            app:layout_constraintTop_toBottomOf="@+id/ll_first">
+
+            <LinearLayout
+                android:id="@+id/ll_clear_cache"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_guide_clear_cash" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:text="清理缓存"
+                    android:textColor="@color/text_color52" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_modify_pwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_modify_pwd" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:text="修改密码"
+                    android:textColor="@color/text_color52" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_guide_off" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:text="暂未开放"
+                    android:textColor="@color/text_color52" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_log_out"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/adaptive_15dp"
+            android:layout_marginRight="@dimen/adaptive_15dp"
+            android:layout_marginTop="@dimen/adaptive_15dp"
+            android:background="@color/withe"
+            android:gravity="center"
+            android:text="退出登录"
+            app:layout_constraintTop_toBottomOf="@+id/ll_second" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

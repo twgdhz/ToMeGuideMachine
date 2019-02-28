@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.guide.EmergencyLinkListActivity">
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        style="@style/new_title"
+        android:background="@color/withe">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@mipmap/ic_guide_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_center"
+            style="@style/title_text_view"
+            android:text="紧急联系人"
+            android:textColor="@color/font_lightblack"
+            android:textSize="@dimen/home_page_txt_16" />
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ry_link_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/rl_title"></android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/tv_complete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/text_color58"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/adaptive_25dp"
+        android:paddingBottom="@dimen/adaptive_10dp"
+        android:paddingTop="@dimen/adaptive_10dp"
+        android:layout_marginLeft="@dimen/adaptive_25dp"
+        android:layout_marginRight="@dimen/adaptive_25dp"
+        android:text="添加"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/ry_link_list" />
+</android.support.constraint.ConstraintLayout>

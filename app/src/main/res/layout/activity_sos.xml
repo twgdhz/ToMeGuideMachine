@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tc="http://schemas.android.com/apk/res/com.guidemachine"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.SOSActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        style="@style/new_title">
+
+        <RelativeLayout
+            android:id="@+id/rl_back"
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@mipmap/ic_back" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_title_center"
+            style="@style/title_text_view"
+            android:text="@string/sos_title"
+            android:textSize="@dimen/home_page_txt_16" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_sos_notice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/home_page_txt_26"
+        android:layout_marginRight="@dimen/home_page_txt_26"
+        android:layout_marginTop="@dimen/home_page_txt_50"
+        android:text="@string/sos_notice"
+        android:textColor="@color/text_color6"
+        android:textSize="@dimen/home_page_txt_26" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/margin_top"
+        android:visibility="gone"
+        android:background="@mipmap/ic_button_sos" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.guidemachine.ui.view.CompletedView
+            android:id="@+id/tasks_view"
+            android:layout_width="223dp"
+            android:layout_height="223dp"
+            tc:circleColor="@color/text_color7"
+            tc:radius="60dp"
+            tc:ringBgColor="@color/white2"
+            tc:ringColor="@color/colorRed"
+            android:layout_centerInParent="true"
+            tc:strokeWidth="10dp" />
+
+        <TextView
+            android:id="@+id/tv_sos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/withe"
+            android:textSize="@dimen/home_page_txt_30"
+            android:text="SOS" />
+    </RelativeLayout>
+</LinearLayout>

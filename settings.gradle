@@ -1,0 +1,3 @@
+include ':app',':easeui','MPChartLib',':lib-zxing'
+include ':faceplatform-ui'
+include ':faceplatform'

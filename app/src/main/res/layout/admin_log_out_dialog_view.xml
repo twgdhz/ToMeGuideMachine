@@ -1,0 +1,44 @@
+<!-- 加载对话框布局 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@mipmap/ic_adimin_log_out_dialog"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <TextView
+        android:id="@+id/tvcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_top_15"
+        android:layout_marginTop="@dimen/adaptive_70dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text=""
+        android:textSize="14dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:id="@+id/btn_ensure"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/adaptive_35dp"
+            android:background="@color/text_color61"
+            android:text="确定"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/adaptive_35dp"
+            android:layout_marginLeft="@dimen/margin_top_15"
+            android:background="@color/font_mx"
+            android:text="取消"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>

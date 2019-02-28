@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cs_parent"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/margin_top_15"
+        android:background="@color/withe"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_25dp"
+            android:background="@mipmap/ic_tour_manager_location"
+            app:layout_constraintBottom_toBottomOf="@id/cs_parent"
+            app:layout_constraintLeft_toLeftOf="@id/cs_parent"
+            app:layout_constraintTop_toTopOf="@+id/cs_parent" />
+
+        <TextView
+            android:id="@+id/tv_device_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/adaptive_25dp"
+            android:text="Q123456"
+            app:layout_constraintBottom_toTopOf="@id/tv_journey_trace"
+            app:layout_constraintLeft_toRightOf="@+id/img_location"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_journey_trace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="行程轨迹"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/tv_device_number"
+            app:layout_constraintTop_toBottomOf="@id/tv_device_number" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/adaptive_15dp"
+            android:text="2018-12-12  12:12"
+            app:layout_constraintBottom_toBottomOf="@id/cs_parent"
+            app:layout_constraintRight_toRightOf="@id/cs_parent"
+            app:layout_constraintTop_toTopOf="@id/cs_parent" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

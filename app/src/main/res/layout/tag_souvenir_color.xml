@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flowlayout_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginRight="8dp"
+    android:background="@drawable/item_souvenir_status"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:textColor="@drawable/item_souvenir_text_color"
+    android:gravity="center"
+    android:text="Helloworld"
+    >
+
+</TextView>

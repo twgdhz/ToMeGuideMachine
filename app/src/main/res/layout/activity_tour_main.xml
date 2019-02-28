@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+
+    <FrameLayout
+        android:id="@+id/tb_fm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tb_rg" />
+
+    <RadioGroup
+        android:id="@+id/tb_rg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navigation_bar_height"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/shape_navigation_bar"
+        android:orientation="horizontal"
+        android:paddingTop="2dp">
+
+        <RadioButton
+            android:id="@+id/rb_team_location"
+            style="@style/navigation_bar"
+            android:checked="true"
+            android:drawableTop="@drawable/btn_navigation_home"
+            android:text="全团定位"
+            android:textSize="@dimen/home_page_txt_12" />
+
+        <RadioButton
+            android:id="@+id/rb_tour_manager"
+            style="@style/navigation_bar"
+            android:drawableTop="@drawable/btn_navigation_tour_manager"
+            android:text="游客管理"
+            android:textSize="@dimen/home_page_txt_12" />
+
+        <RadioButton
+            android:id="@+id/rb_journey_list"
+            style="@style/navigation_bar"
+            android:drawableTop="@drawable/btn_navigation_journey"
+            android:text="行程列表"
+            android:textSize="@dimen/home_page_txt_12" />
+
+        <RadioButton
+            android:id="@+id/rb_guide_setting"
+            style="@style/navigation_bar"
+            android:drawableTop="@drawable/btn_navigation_setting"
+            android:text="设置"
+            android:textSize="@dimen/home_page_txt_12" />
+    </RadioGroup>
+
+</RelativeLayout>
