@@ -1,6 +1,8 @@
 package com.guidemachine.base.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +14,14 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.guidemachine.R;
+import com.guidemachine.constant.Constants;
+import com.guidemachine.service.MqttService;
+import com.guidemachine.service.MyService;
+import com.guidemachine.service.MyServiceConnection;
 import com.guidemachine.service.observer.HomeKeyObserver;
 import com.guidemachine.service.observer.PowerKeyObserver;
 import com.guidemachine.ui.view.CustomDialog;
+import com.guidemachine.util.MobileInfoUtil;
 import com.guidemachine.util.StatusBarUtils;
 
 import java.util.ArrayList;
@@ -31,15 +38,19 @@ public abstract class BaseActivity extends CommonActivity implements BackHandler
     CustomDialog logDialog;
     private PowerKeyObserver mPowerKeyObserver;
     private HomeKeyObserver mHomeKeyObserver;
+    private Intent mServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarUtils.setWindowStatusBarColor(BaseActivity.this, R.color.text_color4);
         progressDialog = new ProgressDialog(this);
+
         InitialView();
 //         configuration();//此方法导致状态栏无法沉浸
-        initBroadCast();
+//        initBroadCast();
+//        mServiceIntent = new Intent(this, MyService.class);
+//        startService(mServiceIntent);
     }
 
     public void setTranslucentStatus() {
@@ -171,12 +182,13 @@ public abstract class BaseActivity extends CommonActivity implements BackHandler
         layoutParams.flags |= WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
         window.setAttributes(layoutParams);
     }
-    private void initBroadCast(){
+
+    private void initBroadCast() {
         mPowerKeyObserver = new PowerKeyObserver(this);
         mPowerKeyObserver.setPowerKeyListener(new PowerKeyObserver.OnPowerKeyListener() {
             @Override
             public void onPowerKeyPressed() {
-                Toast.makeText(getApplicationContext(),"通过广播监听到了电源键",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "通过广播监听到了电源键", Toast.LENGTH_SHORT).show();
             }
         });
         mPowerKeyObserver.startListen();
@@ -185,11 +197,12 @@ public abstract class BaseActivity extends CommonActivity implements BackHandler
         mHomeKeyObserver.setHomeKeyListener(new HomeKeyObserver.OnHomeKeyListener() {
             @Override
             public void onHomeKeyPressed() {
-                Toast.makeText(getApplicationContext(),"通过广播监听到了Home键",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "通过广播监听到了Home键", Toast.LENGTH_SHORT).show();
             }
+
             @Override
             public void onHomeKeyLongPressed() {
-                Toast.makeText(getApplicationContext(),"长按Home键",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "长按Home键", Toast.LENGTH_SHORT).show();
             }
         });
         mHomeKeyObserver.startListen();
@@ -197,33 +210,34 @@ public abstract class BaseActivity extends CommonActivity implements BackHandler
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode){
+        switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                Toast.makeText(this,"通过手指点击了音量增大键",Toast.LENGTH_SHORT).show();
-                Log.d("com.guidemachine","通过手指点击了音量增大键");
+//                Toast.makeText(this, "通过手指点击了音量增大键", Toast.LENGTH_SHORT).show();
+                Log.d("com.guidemachine", "通过手指点击了音量增大键");
                 break;
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                Toast.makeText(this,"通过手指点击了音量降低键",Toast.LENGTH_SHORT).show();
-                Log.d("com.guidemachine","通过手指点击了音量降低键");
+//                Toast.makeText(this, "通过手指点击了音量降低键", Toast.LENGTH_SHORT).show();
+                Log.d("com.guidemachine", "通过手指点击了音量降低键");
                 break;
             case KeyEvent.KEYCODE_POWER:
-                Toast.makeText(this,"通过手指点击了电源锁屏键",Toast.LENGTH_SHORT).show();
-                Log.d("com.guidemachine","通过手指点击了电源锁屏键");
+//                Toast.makeText(this, "通过手指点击了电源锁屏键", Toast.LENGTH_SHORT).show();
+                Log.d("com.guidemachine", "通过手指点击了电源锁屏键");
                 break;
             case KeyEvent.KEYCODE_F1:
-                Toast.makeText(this,"通过手指点击了F1键==启动SOS功能",Toast.LENGTH_SHORT).show();
-                Log.d("com.guidemachine","通过手指点击了F1键==启动SOS功能");
+//                Toast.makeText(this, "通过手指点击了F1键==启动SOS功能", Toast.LENGTH_SHORT).show();
+                Log.d("com.guidemachine", "通过手指点击了F1键==启动SOS功能");
                 break;
 
 
         }
         return super.onKeyDown(keyCode, event);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPowerKeyObserver.stopListen();
-        mHomeKeyObserver.stopListen();
+//        mPowerKeyObserver.stopListen();
+//        mHomeKeyObserver.stopListen();
     }
 
 }

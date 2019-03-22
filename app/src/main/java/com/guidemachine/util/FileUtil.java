@@ -5,7 +5,7 @@ import android.content.Context;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FileUtils {
+public class FileUtil {
 
     /**
      * 读取assets下的txt文件，返回utf-8 String

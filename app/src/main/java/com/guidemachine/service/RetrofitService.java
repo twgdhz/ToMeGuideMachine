@@ -228,6 +228,9 @@ public interface RetrofitService {
     //导游端发布行程
     @POST("app/guideEnd/issuanceTrip")
     Observable<BaseBean> issuanceTrip(@Body RequestBody requestBody);
+    //导游端一键关机
+    @POST("app/guideEnd/shutDown")
+    Observable<BaseBean> shutDown(@Body RequestBody requestBody);
 
     //导游端查询行程
     @POST("app/guideEnd/selectTrip")

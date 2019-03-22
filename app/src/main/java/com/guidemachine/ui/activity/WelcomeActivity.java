@@ -24,8 +24,10 @@ import com.baidu.idl.face.platform.LivenessTypeEnum;
 import com.guidemachine.R;
 import com.guidemachine.baiduface.Config;
 import com.guidemachine.constant.Constants;
+import com.guidemachine.service.TcpServer;
 import com.guidemachine.util.IntentUtils;
 import com.guidemachine.util.Logger;
+import com.guidemachine.util.MobileInfoUtil;
 import com.guidemachine.util.ToastUtils;
 import com.guidemachine.util.share.SPHelper;
 
@@ -47,11 +49,12 @@ public class WelcomeActivity extends AppCompatActivity {
     private static final String[] NEEDED_PERMISSIONS = new String[]{
             Manifest.permission.READ_PHONE_STATE
     };
-
+    private TcpServer tcpServer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        Constants.mImei = MobileInfoUtil.getIMEI(this);
         ButterKnife.bind(this);
 //        requestPermissions();
 //        activeEngine(tvWelcome);
@@ -62,9 +65,12 @@ public class WelcomeActivity extends AppCompatActivity {
             public void run() {
                 IntentUtils.openActivity(WelcomeActivity.this, LanguageSelectActivity.class);
                 finish();
+//                IntentUtils.openActivity(WelcomeActivity.this, FenceDemoAct.class);
+//                finish();
             }
         }, 3000);
-
+        tcpServer = new TcpServer(this);
+        tcpServer.startServer();
     }
 
     private void requestPermissions() {
@@ -128,6 +134,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Integer activeCode) {
+
                         if (activeCode == ErrorInfo.MOK) {
                             showToast(getString(R.string.active_success));
                             new Handler().postDelayed(new Runnable() {
@@ -198,4 +205,6 @@ public class WelcomeActivity extends AppCompatActivity {
             window.setAttributes(layoutParams);
         }
     }
+
+
 }

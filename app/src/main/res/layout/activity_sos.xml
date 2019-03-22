@@ -7,73 +7,167 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.activity.SOSActivity">
-
-    <RelativeLayout
-        android:id="@+id/rl_title"
-        style="@style/new_title">
-
+    <!--
         <RelativeLayout
-            android:id="@+id/rl_back"
-            android:layout_width="60dp"
-            android:layout_height="match_parent">
+            android:id="@+id/rl_title"
+            style="@style/new_title">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:background="@mipmap/ic_back" />
+            <RelativeLayout
+                android:id="@+id/rl_back"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@mipmap/ic_back" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_title_center"
+                style="@style/title_text_view"
+                android:text="@string/sos_title"
+                android:textSize="@dimen/home_page_txt_16" />
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_title_center"
-            style="@style/title_text_view"
-            android:text="@string/sos_title"
-            android:textSize="@dimen/home_page_txt_16" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_sos_notice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="@dimen/home_page_txt_26"
-        android:layout_marginRight="@dimen/home_page_txt_26"
-        android:layout_marginTop="@dimen/home_page_txt_50"
-        android:text="@string/sos_notice"
-        android:textColor="@color/text_color6"
-        android:textSize="@dimen/home_page_txt_26" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/margin_top"
-        android:visibility="gone"
-        android:background="@mipmap/ic_button_sos" />
+        -->
+    <include
+        android:id="@+id/title_id"
+        layout="@layout/title_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.guidemachine.ui.view.CompletedView
-            android:id="@+id/tasks_view"
-            android:layout_width="223dp"
-            android:layout_height="223dp"
-            tc:circleColor="@color/text_color7"
-            tc:radius="60dp"
-            tc:ringBgColor="@color/white2"
-            tc:ringColor="@color/colorRed"
-            android:layout_centerInParent="true"
-            tc:strokeWidth="10dp" />
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/sos_mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/tv_sos"
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/back_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent_back" />
+
+        <RelativeLayout
+            android:id="@+id/sos_text_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:textColor="@color/withe"
-            android:textSize="@dimen/home_page_txt_30"
-            android:text="SOS" />
+            android:layout_marginTop="40dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sos_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginRight="50dp"
+                android:text="遇到"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sos_text3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sos_text"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="长按“SOS”键3秒，即可呼救"
+                android:textStyle="bold"
+                android:textColor="@color/red"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/sos_text4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sos_text3"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:text="我们将及时赶往你的位置提供帮助"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/sos_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <com.guidemachine.ui.view.CompletedView
+                android:id="@+id/tasks_view"
+                android:layout_width="223dp"
+                android:layout_height="223dp"
+                android:layout_centerInParent="true"
+                tc:circleColor="@color/text_color7"
+                tc:radius="60dp"
+                tc:ringBgColor="@color/white2"
+                tc:ringColor="@color/colorRed"
+                tc:strokeWidth="10dp" />
+
+            <TextView
+                android:id="@+id/tv_sos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="SOS"
+                android:textColor="@color/withe"
+                android:textSize="@dimen/home_page_txt_30" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/phone_layout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/sos_phone_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/phone_icon" />
+
+            <TextView
+                android:id="@+id/sos_phone_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/sos_phone_image"
+                android:text="正在为你求救..." />
+        </RelativeLayout>
+
+        <com.skyfishjy.library.RippleBackground xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ripple_ground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:rb_color="@color/text_color63"
+            app:rb_duration="3000"
+            app:rb_radius="20dp"
+            android:visibility="gone"
+            app:rb_rippleAmount="4"
+            app:rb_scale="6">
+
+            <ImageView
+                android:id="@+id/signal_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/signal_icon" />
+        </com.skyfishjy.library.RippleBackground>
     </RelativeLayout>
 </LinearLayout>

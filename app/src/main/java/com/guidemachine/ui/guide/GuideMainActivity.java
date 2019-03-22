@@ -73,7 +73,7 @@ public class GuideMainActivity extends BaseActivity {
         tab = new FragmentTabAdapter(this, fragments, R.id.tb_fm, tbRg);
         tab.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
                                                     public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
-                                                        if (checkedId == R.id.rb_team_location||checkedId==R.id.rb_guide_setting) {
+                                                        if (checkedId == R.id.rb_team_location || checkedId == R.id.rb_guide_setting) {
                                                             StatusBarUtils.setWindowStatusBarColor(GuideMainActivity.this, R.color.title_tour_color);
                                                         } else {
                                                             StatusBarUtils.setWindowStatusBarColor(GuideMainActivity.this, R.color.white);

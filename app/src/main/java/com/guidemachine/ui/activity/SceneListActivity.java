@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -25,6 +26,7 @@ import com.guidemachine.service.entity.BaseBean;
 import com.guidemachine.service.entity.ScenerySpotListBean;
 import com.guidemachine.service.presenter.ScenerySpotPresenter;
 import com.guidemachine.ui.activity.walknavi.WNaviGuideActivity;
+import com.guidemachine.util.L;
 import com.guidemachine.util.StatusBarUtils;
 import com.guidemachine.util.ToastUtils;
 import com.guidemachine.util.VoiceUtil;
@@ -68,7 +70,7 @@ public class SceneListActivity extends BaseActivity {
     WalkNaviLaunchParam walkParam;
     private LatLng startPt, endPt;
     private List<Boolean> isClicks = new ArrayList<>();//控件是否被点击,默认为false，如果被点击，改变值
-
+    private ArrayMap<Integer,AnimationDrawable> mVoiceMap = new ArrayMap<>();
     @Override
     protected int setRootViewId() {
         return R.layout.activity_scene_list;
@@ -94,10 +96,13 @@ public class SceneListActivity extends BaseActivity {
             //重新请求接口
         } else {
             adapter = new BaseRecyclerAdapter(SceneListActivity.this, scenerySpotListBean.getValue().getList(), R.layout.item_scene_list) {
+                BaseViewHolder mHelper;
                 @Override
                 protected void convert(final BaseViewHolder helper, Object item, final int position) {
+                    mHelper = helper;
                     for (int i = 0; i < scenerySpotListBean.getValue().getList().size(); i++) {
                         isClicks.add(false);
+//                        mVoiceMap.put(i, (AnimationDrawable) helper.getView(R.id.img_play_voice).getBackground());
                     }
                     helper.setText(R.id.tv_scene_spot_name, scenerySpotListBean.getValue().getList().get(position).getName());
                     double sceneSpotLongitude = scenerySpotListBean.getValue().getList().get(position).getLng();
@@ -112,43 +117,52 @@ public class SceneListActivity extends BaseActivity {
                         String str = df.format(distance);
                         helper.setText(R.id.tv_scene_spot_distance, str + "米");
                     }
-
+                    mVoiceMap.put(position, (AnimationDrawable) helper.getView(R.id.img_play_voice).getBackground());
 
 //                    helper.setIsRecyclable(false);
-
-                    helper.getView(R.id.img_play_voice).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            for (int i = 0; i < isClicks.size(); i++) {
-                                isClicks.set(i, false);
-                            }
-                            isClicks.set(position, true);
-//                            notifyDataSetChanged();
-                            drawable = (AnimationDrawable) helper.getView(R.id.img_play_voice).getBackground();
+                    drawable = (AnimationDrawable) helper.getView(R.id.img_play_voice).getBackground();
+                    drawable.stop();
+                    mVoiceMap.put(position, drawable);
+                    L.gi().d(position+"=====1111===="+mVoiceMap.size());
+                    helper.getView(R.id.img_play_voice).setOnClickListener(view -> {
+//                        for (int i = 0; i < isClicks.size(); i++) {
+//                            mVoiceMap.get(i).stop();
+//                        }
+                        for(AnimationDrawable drawable : mVoiceMap.values()){
                             drawable.stop();
-                            if (isClicks.get(position) == true) {
-                                if (drawable != null&&!drawable.isRunning()) {
-                                    drawable.start();
-                                }else if (drawable.isRunning()){
-                                    drawable.stop();
-                                }
-                                VoiceUtil.getInstance().modeIndicater(SceneListActivity.this, scenerySpotListBean.getValue().getList().get(position).getScenerySpotId());
-                            }else {
-                                drawable.stop();
-                            }
+                        }
+//                        isClicks.set(position, true);
+//                        notifyDataSetChanged();
+//                        drawable = (AnimationDrawable) helper.getView(R.id.img_play_voice).getBackground();
+                        drawable = mVoiceMap.get(position);
+                        drawable.start();
+//                        if (drawable != null&&!drawable.isRunning()) {
+//                                drawable.start();
+//                            }else if (drawable.isRunning()){
+//                                drawable.stop();
+//                            }
+//                        drawable.stop();
+//                        if (isClicks.get(position) == true) {
+//                            L.gi().d(drawable.isRunning()+"=========");
+//                            if (drawable != null&&!drawable.isRunning()) {
+//                                drawable.start();
+//                            }else if (drawable.isRunning()){
+//                                drawable.stop();
+//                            }
+//                            VoiceUtil.getInstance().modeIndicater(SceneListActivity.this, scenerySpotListBean.getValue().getList().get(position).getScenerySpotId());
+//                        }else {
+//                            initImage();
+//                            drawable.stop();
+//                        }
 
-                        }
                     });
-                    helper.getView(R.id.rl_navi).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startPt = new LatLng(Double.parseDouble(SPHelper.getInstance(SceneListActivity.this).getLatitude()),
-                                    Double.parseDouble(SPHelper.getInstance(SceneListActivity.this).getLongitude()));
-                            endPt = new LatLng(30.612961, 104.05325);
-                            walkParam = new WalkNaviLaunchParam().stPt(startPt).endPt(endPt);
-                            walkParam.extraNaviMode(0);
-                            startWalkNavi();
-                        }
+                    helper.getView(R.id.rl_navi).setOnClickListener(view -> {
+                        startPt = new LatLng(Double.parseDouble(SPHelper.getInstance(SceneListActivity.this).getLatitude()),
+                                Double.parseDouble(SPHelper.getInstance(SceneListActivity.this).getLongitude()));
+                        endPt = new LatLng(30.612961, 104.05325);
+                        walkParam = new WalkNaviLaunchParam().stPt(startPt).endPt(endPt);
+                        walkParam.extraNaviMode(0);
+                        startWalkNavi();
                     });
                 }
             };

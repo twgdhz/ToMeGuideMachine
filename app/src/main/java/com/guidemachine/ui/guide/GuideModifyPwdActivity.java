@@ -1,10 +1,10 @@
 package com.guidemachine.ui.guide;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import com.guidemachine.R;
 import com.guidemachine.base.ui.BaseActivity;
+
+import butterknife.OnClick;
+
 /**
 * @author ChenLinWang
 * @email 422828518@qq.com
@@ -26,5 +26,10 @@ public class GuideModifyPwdActivity extends BaseActivity {
     @Override
     protected void InitialView() {
 
+    }
+
+    @OnClick(R.id.rl_back)
+    public void onClick() {
+        finish();
     }
 }

@@ -1,9 +1,11 @@
 package com.guidemachine.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,8 +25,12 @@ import com.guidemachine.MainActivity;
 import com.guidemachine.R;
 import com.guidemachine.base.ui.BaseActivity;
 import com.guidemachine.service.entity.BaseBean;
+import com.guidemachine.service.entity.PersonCenterBean;
 import com.guidemachine.service.entity.VisitHistoryBean;
+import com.guidemachine.service.presenter.PersonCenterPresenter;
+import com.guidemachine.service.presenter.ShopGoodListPresenter;
 import com.guidemachine.service.presenter.VisitHistsoryPresenter;
+import com.guidemachine.service.view.PersonCenterView;
 import com.guidemachine.service.view.VisitHistoryView;
 import com.guidemachine.ui.activity.order.OrdersActivity;
 import com.guidemachine.ui.adapter.GridViewAdapter;
@@ -33,13 +39,19 @@ import com.guidemachine.ui.guide.login.GuideLoginActivity;
 import com.guidemachine.ui.superadmin.SuperAdminMainActivity;
 import com.guidemachine.util.IntentUtils;
 import com.guidemachine.util.IsLoginUtils;
+import com.guidemachine.util.L;
 import com.guidemachine.util.StatusBarUtils;
 import com.guidemachine.util.ToastUtils;
 import com.guidemachine.util.share.SPHelper;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.entity.LocalMedia;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,6 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 /**
@@ -78,6 +91,9 @@ public class PersonCenterActivity extends BaseActivity {
     private BaiduMap baiduMap;
     //景点访问记录
     VisitHistsoryPresenter visitHistsoryPresenter;
+    private PersonCenterPresenter personCenterPresenter;
+    private List<LocalMedia> selectList = new ArrayList();
+    private File mFile;
 
     @Override
     protected int setRootViewId() {
@@ -152,6 +168,10 @@ public class PersonCenterActivity extends BaseActivity {
                 IntentUtils.openActivity(PersonCenterActivity.this, GuideLoginActivity.class);
             }
         });
+
+        personCenterPresenter = new PersonCenterPresenter(PersonCenterActivity.this);
+        personCenterPresenter.onCreate();
+        personCenterPresenter.attachView(personCenterView);
     }
 
     VisitHistoryView visitHistoryView = new VisitHistoryView() {
@@ -211,4 +231,62 @@ public class PersonCenterActivity extends BaseActivity {
     public void onClick() {
         finish();
     }
+
+    @OnClick(R.id.person_head_image)
+    public void onHeadClick(){
+        PictureSelector.create(this)
+                .openGallery(PictureMimeType.ofImage())
+//                    .theme()
+//                    .maxSelectNum(1)
+//                    .minSelectNum(1)
+                .selectionMode(PictureConfig.SINGLE)
+                .previewImage(true)
+                .isCamera(true)
+                .enableCrop(true)
+                .compress(true)
+                .imageFormat(PictureMimeType.PNG)
+                .cropCompressQuality(80)// 裁剪压缩质量 默认90 int
+                .minimumCompressSize(200)// 小于200kb的图片不压缩
+                .glideOverride(160, 160)
+                .previewEggs(true)
+                .openClickSound(false)
+                .freeStyleCropEnabled(true)
+                .circleDimmedLayer(false)
+                .showCropFrame(false)
+                .showCropGrid(false)
+                .selectionMedia(selectList)
+                .forResult(PictureConfig.CHOOSE_REQUEST);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    L.gi().d("获取到路径==================");
+//                    selectList = PictureSelector.obtainMultipleResult(data);
+//                    L.gi().i(selectList.size()+"=="+selectList.toString());
+//                    if (!selectList.isEmpty()) {
+//                        mFile = new File(selectList.get(0).getCompressPath());
+//                        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), mFile);
+//                        MultipartBody.Part part = MultipartBody.Part.createFormData("file", mFile.getName(), requestFile);
+//                        L.gi().d("文件路径:"+mFile.getPath());
+//                    }
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private PersonCenterView personCenterView = new PersonCenterView() {
+        @Override
+        public void onSuccess(BaseBean<PersonCenterBean> bean) {
+
+        }
+
+        @Override
+        public void onError(String result) {
+
+        }
+    };
 }

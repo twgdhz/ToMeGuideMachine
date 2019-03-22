@@ -1,6 +1,7 @@
 package com.guidemachine.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -69,26 +70,30 @@ public class LanguageSelectActivity extends BaseActivity implements EasyPermissi
     protected void InitialView() {
         setTranslucentStatus();
 //        rgChinese.setChecked(true);
-        tbRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkId) {
-                if (checkId == R.id.rg_chinese) {
-                    language = "cn";
-                    IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
-                    finish();
-                } else if (checkId == R.id.rg_english) {
-                    language = "en";
-                    IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
-                    finish();
-                } else if (checkId == R.id.bn_indonesia) {
-                    language = "cn";
-                    IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
-                    finish();
-                } else if (checkId == R.id.bn_france) {
-                    language = "cn";
-                    IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
-                    finish();
-                }
+        tbRg.setOnCheckedChangeListener((radioGroup, checkId) -> {
+            if (checkId == R.id.rg_chinese) {
+                language = "cn";
+//                IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
+                    IntentUtils.openActivity(LanguageSelectActivity.this, LoginActivity.class, "type", "1");
+                finish();
+            } else if (checkId == R.id.rg_english) {
+                language = "en";
+                IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
+//                    IntentUtils.openActivity(LanguageSelectActivity.this, LoginActivity.class, "type", "1");
+
+                finish();
+            } else if (checkId == R.id.bn_indonesia) {
+                language = "cn";
+                IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
+//                    IntentUtils.openActivity(LanguageSelectActivity.this, LoginActivity.class, "type", "1");
+
+                finish();
+            } else if (checkId == R.id.bn_france) {
+                language = "cn";
+                IntentUtils.openActivity(LanguageSelectActivity.this, FaceLivenessExpActivity.class);
+//                    IntentUtils.openActivity(LanguageSelectActivity.this, LoginActivity.class, "type", "1");
+
+                finish();
             }
         });
         llLanguageEnsure.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +138,7 @@ public class LanguageSelectActivity extends BaseActivity implements EasyPermissi
     }
 
     //切换方法
+    @SuppressLint("NewApi")
     private void switchLanguage(String language) {
         //获取资源
         Resources resources = getResources();

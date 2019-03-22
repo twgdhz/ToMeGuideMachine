@@ -13,16 +13,26 @@ import android.widget.TextView;
 
 import com.guidemachine.R;
 import com.guidemachine.base.ui.BaseFragment;
+import com.guidemachine.service.entity.BaseBean;
+import com.guidemachine.service.presenter.GuideSettingPresenter;
+import com.guidemachine.service.presenter.ReleaseJourneyPresenter;
+import com.guidemachine.service.view.BaseView;
 import com.guidemachine.ui.guide.EmergencyContactActivity;
 import com.guidemachine.ui.guide.EmergencyLinkListActivity;
 import com.guidemachine.ui.guide.GuideJobModeActivity;
 import com.guidemachine.ui.guide.GuideModifyPwdActivity;
+import com.guidemachine.ui.guide.ReleaseTourJourneyActivity;
 import com.guidemachine.ui.view.CustomClearCacheDialog;
 import com.guidemachine.ui.view.CustomLogOutDialog;
 import com.guidemachine.ui.view.CustomPowerOffDialog;
 import com.guidemachine.util.IntentUtils;
+import com.guidemachine.util.L;
 import com.guidemachine.util.StatusBarUtils;
 import com.guidemachine.util.ToastUtils;
+import com.guidemachine.util.share.SPHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -30,11 +40,13 @@ import java.math.BigDecimal;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * 导游设置
  */
-public class GuideSettingFragment extends BaseFragment implements View.OnClickListener, CustomClearCacheDialog.ClearCache {
+public class GuideSettingFragment extends BaseFragment implements View.OnClickListener, CustomClearCacheDialog.ClearCache,BaseView {
 
     @BindView(R.id.rl_back)
     RelativeLayout rlBack;
@@ -65,7 +77,7 @@ public class GuideSettingFragment extends BaseFragment implements View.OnClickLi
     TextView tvLogOut;
     @BindView(R.id.ll_modify_pwd)
     LinearLayout llModifyPwd;
-
+    private GuideSettingPresenter guideSettingPresenter;
     @Override
     protected int setRootViewId() {
         return R.layout.fragment_guide_setting;
@@ -80,6 +92,10 @@ public class GuideSettingFragment extends BaseFragment implements View.OnClickLi
         llPowerOff.setOnClickListener(this);
         tvLogOut.setOnClickListener(this);
         llModifyPwd.setOnClickListener(this);
+
+        guideSettingPresenter = new GuideSettingPresenter(getActivity());
+        guideSettingPresenter.onCreate();
+        guideSettingPresenter.attachView(this);
     }
 
     @Override
@@ -102,7 +118,21 @@ public class GuideSettingFragment extends BaseFragment implements View.OnClickLi
                 break;
             case R.id.ll_power_off:
                 if (customPowerOffDialog == null) {
-                    customPowerOffDialog = new CustomPowerOffDialog(getActivity(), "确定远程关机所有设备？");
+                    customPowerOffDialog = new CustomPowerOffDialog(getActivity(), "确定远程关机所有设备？").setOffButton(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            JSONObject requestData = new JSONObject();
+                            try {
+                                requestData.put("sceneryId", SPHelper.getInstance(getActivity()).getSceneryId());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestData.toString());
+                            guideSettingPresenter.releaseJourney(requestBody);
+                            showProgressDialog();
+                            L.gi().d("关机所有设备============");
+                        }
+                    });
                 }
                 customPowerOffDialog.show();
                 break;
@@ -238,4 +268,14 @@ public class GuideSettingFragment extends BaseFragment implements View.OnClickLi
         unbinder.unbind();
     }
 
+    @Override
+    public void onSuccess(BaseBean mBaseBean) {
+        dismissProgressDialog();
+    }
+
+    @Override
+    public void onError(String result) {
+        ToastUtils.msg(result);
+        dismissProgressDialog();
+    }
 }

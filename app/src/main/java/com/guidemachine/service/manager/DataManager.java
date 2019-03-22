@@ -230,6 +230,9 @@ public class DataManager {
     public Observable<BaseBean> issuanceTrip(RequestBody requestBody) {
         return mRetrofitService.issuanceTrip(requestBody);
     }
+    public Observable<BaseBean> shutDown(RequestBody requestBody) {
+        return mRetrofitService.shutDown(requestBody);
+    }
     public Observable<BaseBean<List<SearchJourneyBean>>> selectTrip(RequestBody requestBody) {
         return mRetrofitService.selectTrip(requestBody);
     }

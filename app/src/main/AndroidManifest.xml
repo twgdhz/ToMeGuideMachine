@@ -28,7 +28,6 @@
     <!-- Required -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -71,6 +70,8 @@
     <uses-permission android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <uses-permission android:name="android.permission.SHUTDOWN"
+        tools:ignore="ProtectedPermissions" />
     <!-- 需要使用Feature -->
     <uses-feature
         android:name="android.hardware.camera"
@@ -105,6 +106,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:sharedUserId="android.uid.system"
         android:theme="@style/AppTheme">
         <uses-library
             android:name="org.apache.http.legacy"
@@ -112,6 +114,12 @@
 
         <activity
             android:name=".ui.activity.GuideActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name="com.guidemachine.ui.activity.WalkieTalkieAct"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name=".ui.activity.FenceDemoAct"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.activity.WelcomeActivity"
@@ -123,6 +131,9 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+        <activity
+            android:name="com.guidemachine.ui.activity.VoiceExplainAct"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".ui.activity.RegisterAndRecognizeActivity"
@@ -416,6 +427,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity android:name=".ui.activity.ShowBigImageActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+
     </application>
 
 </manifest>

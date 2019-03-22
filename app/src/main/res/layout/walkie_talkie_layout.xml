@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title_id"
+        layout="@layout/title_layout" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/divider_line_wide"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="25dp"
+            android:layout_weight="1"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/circle_image" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/walkie_image" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/walkie_image2" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/walkie_image3" />
+            <TextView
+                android:id="@+id/time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:layout_marginBottom="50dp"
+                android:visibility="gone"
+                android:text="00:00:00"/>
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/speech_image"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_gravity="center_horizontal|bottom"
+
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/no_speech_image" />
+    </LinearLayout>
+</LinearLayout>

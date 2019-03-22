@@ -159,7 +159,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                     IntentUtils.openActivity(LoginActivity.this, MapActivity.class);
                                     finish();
                                 }
-
                             }
                         })
                         .create().show();

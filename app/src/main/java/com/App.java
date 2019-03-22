@@ -3,6 +3,7 @@ package com;
 import android.app.Application;
 import android.app.Service;
 import android.content.Context;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.support.multidex.MultiDexApplication;
 import android.util.DisplayMetrics;
@@ -24,6 +25,8 @@ public class App extends MultiDexApplication {
     public Vibrator mVibrator;
     public static List<LivenessTypeEnum> livenessList = new ArrayList<LivenessTypeEnum>();
     public static boolean isLivenessRandom = false;
+    public Handler mHandler; // 公共单例Handler
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,6 +53,10 @@ public class App extends MultiDexApplication {
          */
         initDisplayOpinion();
 
+
+    }
+    public App() {
+        mHandler = new Handler();
 
     }
     public static App getMyApplication() {

@@ -1,5 +1,6 @@
 package com.guidemachine.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,8 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import com.App;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClientOption;
 import com.baidu.location.Poi;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -38,6 +43,8 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.Polyline;
@@ -56,14 +63,12 @@ import com.baidu.trace.api.fence.AlarmPoint;
 import com.baidu.trace.api.fence.CircleFence;
 import com.baidu.trace.api.fence.CreateFenceRequest;
 import com.baidu.trace.api.fence.CreateFenceResponse;
-import com.baidu.trace.api.fence.DeleteFenceRequest;
 import com.baidu.trace.api.fence.DeleteFenceResponse;
 import com.baidu.trace.api.fence.DistrictFence;
 import com.baidu.trace.api.fence.FenceAlarmInfo;
 import com.baidu.trace.api.fence.FenceAlarmPushInfo;
 import com.baidu.trace.api.fence.FenceInfo;
 import com.baidu.trace.api.fence.FenceListResponse;
-import com.baidu.trace.api.fence.FenceType;
 import com.baidu.trace.api.fence.HistoryAlarmResponse;
 import com.baidu.trace.api.fence.MonitoredAction;
 import com.baidu.trace.api.fence.MonitoredStatus;
@@ -102,17 +107,22 @@ import com.guidemachine.ui.activity.video.VideoPlayerActivity;
 import com.guidemachine.ui.activity.walknavi.WNaviGuideActivity;
 import com.guidemachine.ui.guide.PaintFenceActivity;
 import com.guidemachine.util.BadgeView;
-import com.guidemachine.util.FileUtils;
+import com.guidemachine.util.FileUtil;
 import com.guidemachine.util.IntentUtils;
 import com.guidemachine.util.IsLoginUtils;
+import com.guidemachine.util.L;
+import com.guidemachine.util.LatUtil;
 import com.guidemachine.util.LocationService;
 import com.guidemachine.util.LogUtils;
 import com.guidemachine.util.Logger;
+import com.guidemachine.util.MediaPlayerUtils;
 import com.guidemachine.util.MobileInfoUtil;
+import com.guidemachine.util.SoundManager;
 import com.guidemachine.util.StatusBarUtils;
 import com.guidemachine.util.ToastUtils;
 import com.guidemachine.util.VoiceUtil;
 import com.guidemachine.util.overlayutil.OverlayManager;
+import com.guidemachine.util.serialPort.SerialPortUtils;
 import com.guidemachine.util.share.SPHelper;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.easeui.EaseConstant;
@@ -126,6 +136,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import android_serialport_api.SerialPort;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.MediaType;
@@ -205,8 +216,26 @@ public class MapActivity extends BaseActivity {
     //步行导航启动参数(引入esaeui下的jar包)
     WalkNaviLaunchParam walkParam;
     private LatLng startPt, endPt;
+    private BDLocation mCurrentLocation;
     private String entityName;
+    private SoundManager mSoundManager;
+    private int mTag = 0, mCurrentId = 1, mIsPlayId = 0;
+    //围栏半径
+    private double radius = 20;
 
+    //去燥
+    private int denoise = 200;
+
+    private OverlayOptions overlayOptions;
+    private Overlay currentOverlay;
+    private List<com.baidu.mapapi.model.LatLng> circleCenterList;
+
+    BitmapDescriptor mCurrentMarker;
+    private SerialPortUtils serialPortUtils;
+    private MediaPlayer player;
+    private String mTempDate, mSigal;
+    private boolean isPlaying = true;
+    private MediaPlayerUtils mediaPlayerUtils;
     @Override
     protected int setRootViewId() {
         return R.layout.activity_map;
@@ -220,227 +249,296 @@ public class MapActivity extends BaseActivity {
     @Override
     protected void InitialView() {
 //        Add(this);
+        mediaPlayerUtils = MediaPlayerUtils.getInstance();
+        //打开串口
+        serialPortUtils = SerialPortUtils.getInstance();
+        serialPortUtils.openSerialPort();
+        if (serialPortUtils.isConnect()) {
+            //设置身份
+            com.guidemachine.util.serialPort.Message message = new com.guidemachine.util.serialPort.Message();
+            message.setCommandType(Constants.VISE_COMMAND_HEAD_FLAG_01);
+            message.setCommandData(Constants.VISE_COMMAND_HEAD_FLAG_01);
+            message.setData(new byte[]{message.getCommandType(), message.getCommandData()});
+            SerialPortUtils.getInstance().sendHex(SerialPortUtils.getInstance().getHexResult(message));
+            L.gi().d("串口打开成功");
+        }else{
+            Toast.makeText(MapActivity.this, "串口打开失败", Toast.LENGTH_SHORT).show();
+        }
+        L.gi().d("获取imei："+Constants.mImei);
+        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
+        mSoundManager = SoundManager.getInstence();
+        mSoundManager.initMusic(getApplicationContext());
         EventBus.getDefault().register(this);
         StatusBarUtils.setWindowStatusBarColor(MapActivity.this, R.color.text_color4);
         entityName = MobileInfoUtil.getIMEI(MapActivity.this);
+
         baiduMap = mapView.getMap();
+
         // 不显示地图缩放控件（按钮控制栏）
         mapView.showZoomControls(false);
+        //开启定位图层
+        baiduMap.setMyLocationEnabled(true);
+
         //更改指南针位置
         baiduMap.setCompassPosition(new Point(650, 80));
         baiduMap.clear();//先清除一下图层
+//        MyLocationConfiguration myLocationConfiguration = new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true,BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location));
+
+        baiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
+                MyLocationConfiguration.LocationMode.NORMAL, true, mCurrentMarker));
+
         // -----------location config ------------
         locationService = ((App) getApplication()).locationService;
         //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
         locationService.registerListener(mListener);
+
         //注册监听
         locationService.setLocationOption(locationService.getDefaultLocationClientOption(MapActivity.this));
         locationService.start();
-        rlRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (markerType == 1) {
-                    if (scenerySpotListBean != null) {
-                        Intent intent = new Intent(MapActivity.this, SceneListActivity.class);
-                        intent.putExtra("scenerySpotListBean", scenerySpotListBean);
-                        startActivity(intent);
-                    } else {
-                        IntentUtils.openActivity(MapActivity.this, SceneListActivity.class);
-                    }
-                } else if (markerType == 2) {
 
-                } else if (markerType == 3) {
-                    if (IsLoginUtils.getInstence().isLogin(MapActivity.this) == true) {
-                        IntentUtils.openActivity(MapActivity.this, ShopListActivity.class);
-                    } else {
-                        IntentUtils.openActivity(MapActivity.this, LoginActivity.class, "type", "1");
-                    }
-                } else if (markerType == 4) {
-                    if (scenerySpotListBean != null) {
-                        Intent intent = new Intent(MapActivity.this, ToiletListActivity.class);
-                        intent.putExtra("scenerySpotListBean", scenerySpotListBean);
-                        startActivity(intent);
-                    } else {
-                        IntentUtils.openActivity(MapActivity.this, ToiletListActivity.class);
-                    }
+        rlRight.setOnClickListener(view -> {
+            if (markerType == 1) {
+                if (scenerySpotListBean != null) {
+                    Intent intent = new Intent(MapActivity.this, SceneListActivity.class);
+                    intent.putExtra("scenerySpotListBean", scenerySpotListBean);
+                    startActivity(intent);
+
+                } else {
+                    IntentUtils.openActivity(MapActivity.this, SceneListActivity.class);
                 }
+            } else if (markerType == 2) {
+
+            } else if (markerType == 3) {
+                if (IsLoginUtils.getInstence().isLogin(MapActivity.this) == true) {
+                    IntentUtils.openActivity(MapActivity.this, ShopListActivity.class);
+                } else {
+                    IntentUtils.openActivity(MapActivity.this, LoginActivity.class, "type", "1");
+                }
+            } else if (markerType == 4) {
+                if (scenerySpotListBean != null) {
+                    Intent intent = new Intent(MapActivity.this, ToiletListActivity.class);
+                    intent.putExtra("scenerySpotListBean", scenerySpotListBean);
+                    startActivity(intent);
+                } else {
+                    IntentUtils.openActivity(MapActivity.this, ToiletListActivity.class);
+                }
+            }
+
+        });
+        //串口数据监听事件 接收到RFID
+        serialPortUtils.setOnDataReceiveListener(new SerialPortUtils.OnDataReceiveListener() {
+            @Override
+            public void onDataReceive(String data, String sigal) {
+                L.gi().d("获取的data数据：" + data);
+                switch (data) {
+                    case "1234567890ABCDEF1234567890123456":
+                        L.gi().d("开始播报第一个RFID" + data);
+                        mSigal = sigal;
+                        handler.sendEmptyMessage(100);
+//                        Toast.makeText(MapActivity.this,"获取到信号强度："+sigal,Toast.LENGTH_SHORT).show();
+//                        if (!data.equals(mTempDate)) {
+//                            if (player != null) {
+//                                player.reset();
+//                            }
+//                            player = MediaPlayer.create(MapActivity.this, R.raw.voice1);
+//                            player.start();
+//                        }
+//                        mTempDate = data;
+                        break;
+                }
+                L.gi().d("进入数据监听事件中。。。");
+//                mBuffer = buffer;
+//               App.getMyApplication().mHandler.post(runnable);
 
             }
+
+            //开线程更新UI
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    L.gi().d("开始播放111。。。");
+                    if (mSoundManager != null) {
+                        L.gi().d("开始播放2222。。。");
+                        mIsPlayId = mSoundManager.StartMusic(18);
+                    }
+//                    mReciveText.setText("接收到数据："+changeTool.ByteArrToHex(mBuffer).trim()+" ");
+////                    mReciveText.setText("接收到数据："+" "+Arrays.toString(mBuffer));
+//                    textView_status.setText("size："+ String.valueOf(mBuffer.length)+"数据监听："+ new String(mBuffer));
+                }
+            };
         });
-        imgSos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                IntentUtils.openActivity(MapActivity.this, SOSActivity.class);
-            }
+        imgSos.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putDouble("latitude", latitude);
+            bundle.putDouble("longitude", longitude);
+            bundle.putFloat("radius", mCurrentLocation.getRadius());
+            bundle.putFloat("direction", mCurrentLocation.getDirection());
+
+            IntentUtils.openActivity(MapActivity.this, SOSActivity.class, bundle);
+
         });
+//        imgSos.setOnClickListener(view ->
+//                IntentUtils.openActivity(MapActivity.this, FenceDemoAct.class)
+//        );
         rlNotice.setOnClickListener(new View.OnClickListener() {//消息通知
             @Override
             public void onClick(View view) {
                 IntentUtils.openActivity(MapActivity.this, NoticeActivity.class, "temperature", tvTemperature.getText().toString());
             }
         });
-        llMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        llMessage.setOnClickListener(view -> {
 //                IntentUtils.openActivity(MapActivity.this, PaintFenceActivity.class);
-                if (DemoHelper.getInstance().isLoggedIn()) {
-                    startActivity(new Intent(MapActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID,
-                            SPHelper.getInstance(MapActivity.this).getPhone()));
+            if (DemoHelper.getInstance().isLoggedIn()) {
+                startActivity(new Intent(MapActivity.this, ChatActivity.class).putExtra(EaseConstant.EXTRA_USER_ID,
+                        SPHelper.getInstance(MapActivity.this).getPhone()));
 //                    finish();
-                } else {
-                    IntentUtils.openActivity(MapActivity.this, LoginActivity.class, "type", "2");
-                }
+            } else {
+                IntentUtils.openActivity(MapActivity.this, LoginActivity.class, "type", "2");
             }
         });
-        rlWaveCommunicate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ToastUtils.msg("功能暂未开放");
-//                IntentUtils.openActivity(MapActivity.this, PaintFenceActivity.class);
-            }
+        rlWaveCommunicate.setOnClickListener(view -> {
+//            ToastUtils.msg("功能暂未开放");
+            //对讲机
+            IntentUtils.openActivity(MapActivity.this, WalkieTalkieAct.class);
         });
-        rlBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                IntentUtils.openActivity(MapActivity.this, PersonCenterActivity.class);
-            }
-        });
+        rlBack.setOnClickListener(view -> IntentUtils.openActivity(MapActivity.this, PersonCenterActivity.class));
 
         fencePresenter = new FencePresenter(MapActivity.this);
         fencePresenter.onCreate();
         fencePresenter.attachView(fenceView);
-        JSONObject requestFenceData = new JSONObject();
-        try {
-            requestFenceData.put("imei", getIMEI(MapActivity.this));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        RequestBody requestFenceBody = RequestBody.create(MediaType.parse("application/json"), requestFenceData.toString());
-        fencePresenter.getFence(requestFenceBody);
+//        JSONObject requestFenceData = new JSONObject();
+//        try {
+//            requestFenceData.put("imei", getIMEI(MapActivity.this));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        RequestBody requestFenceBody = RequestBody.create(MediaType.parse("application/json"), requestFenceData.toString());
+        //获取电子围栏接口
+//        fencePresenter.getFence(requestFenceBody);
+        fencePresenter.getFence2(getIMEI(MapActivity.this));
 
-        tbRg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                scenerySpotPresenter = new ScenerySpotPresenter(MapActivity.this);
-                scenerySpotPresenter.onCreate();
-                scenerySpotPresenter.attachView(scenerySpotView);
-                rbLine.setEnabled(false);
-                rbScene.setEnabled(false);
-                rbShopping.setEnabled(false);
-                rbToilet.setEnabled(false);
+        tbRg.setOnCheckedChangeListener((radioGroup, checkedId) -> {
+            scenerySpotPresenter = new ScenerySpotPresenter(MapActivity.this);
+            scenerySpotPresenter.onCreate();
+            scenerySpotPresenter.attachView(scenerySpotView);
+            rbLine.setEnabled(false);
+            rbScene.setEnabled(false);
+            rbShopping.setEnabled(false);
+            rbToilet.setEnabled(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    rbLine.setEnabled(true);
+                    rbScene.setEnabled(true);
+                    rbShopping.setEnabled(true);
+                    rbToilet.setEnabled(true);
+                }
+            }, 1000);
+            if (checkedId == R.id.rb_scene) {//1
+                markerType = 1;
+                baiduMap.clear();
+                JSONObject requestData = new JSONObject();
+                try {
+                    requestData.put("sceneryId", SPHelper.getInstance(MapActivity.this).getSceneryId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestData.toString());
+                scenerySpotPresenter.getSceneryList(requestBody, 1);
+                fencePresenter.getFence2(getIMEI(MapActivity.this));
+
+                showProgressDialog();
+            } else if (checkedId == R.id.rb_line) {
+                markerType = 2;
+                baiduMap.clear();
+                //构建折线点坐标
+                LatLng p1 = new LatLng(30.903577, 103.579111);
+                LatLng p2 = new LatLng(30.905037, 103.574);
+                LatLng p3 = new LatLng(30.908453, 103.56719);
+
+                LatLng p4 = new LatLng(30.911509, 103.56437);
+                LatLng p5 = new LatLng(30.916423, 103.569463);
+                LatLng p6 = new LatLng(30.914192, 103.567078);
+
+                LatLng p7 = new LatLng(30.916431, 103.56945);
+                LatLng p8 = new LatLng(30.907426, 103.57492);
+                LatLng p9 = new LatLng(30.906253, 103.575006);
+                LatLng p10 = new LatLng(30.903584, 103.57908);
+                List<LatLng> points = new ArrayList<LatLng>();
+                points.add(p1);
+                points.add(p2);
+                points.add(p3);
+                points.add(p4);
+                points.add(p5);
+                points.add(p6);
+                points.add(p7);
+                points.add(p8);
+                points.add(p9);
+                points.add(p10);
+
+                //设置折线的属性
+                OverlayOptions mOverlayOptions = new PolylineOptions()
+                        .width(10)
+                        .color(0xAAFF0000)
+                        .points(points);
+                //在地图上绘制折线
+                //mPloyline 折线对象
+                Overlay mPolyline = baiduMap.addOverlay(mOverlayOptions);
+
+                List<Integer> bitmaps = new ArrayList<Integer>();
+                bitmaps.add(R.mipmap.marker1);
+                bitmaps.add(R.mipmap.marker2);
+                bitmaps.add(R.mipmap.marker3);
+                bitmaps.add(R.mipmap.marker4);
+                bitmaps.add(R.mipmap.marker5);
+
+                bitmaps.add(R.mipmap.marker6);
+                bitmaps.add(R.mipmap.marker7);
+                bitmaps.add(R.mipmap.marker8);
+                bitmaps.add(R.mipmap.marker9);
+                bitmaps.add(R.mipmap.marker10);
+
+                for (int i = 0; i < points.size(); i++) {
+                    Bitmap bitmap = null;
+                    bitmap = BitmapFactory.decodeResource(getResources(), bitmaps.get(i));
+                    BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
+                    OverlayOptions overlayOptions;
+                    overlayOptions = new MarkerOptions().position(new LatLng(points.get(i).latitude, points.get(i).longitude))
+                            .anchor(100, 100)
+                            .icon(bitmapDescriptor)
+                            .zIndex(5);
+                    overlayOptionsList.add(overlayOptions);
+                    Overlay overlay = baiduMap.addOverlay(overlayOptions);
+                    overlays.add(overlay);
+                }
+                zoomToSpan();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        rbLine.setEnabled(true);
-                        rbScene.setEnabled(true);
-                        rbShopping.setEnabled(true);
-                        rbToilet.setEnabled(true);
+                        zoomToSpan();
                     }
-                }, 1000);
-                if (checkedId == R.id.rb_scene) {//1
-                    markerType = 1;
-                    baiduMap.clear();
-                    JSONObject requestData = new JSONObject();
-                    try {
-                        requestData.put("sceneryId", SPHelper.getInstance(MapActivity.this).getSceneryId());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestData.toString());
-                    scenerySpotPresenter.getSceneryList(requestBody, 1);
-                    showProgressDialog();
-                } else if (checkedId == R.id.rb_line) {
-                    markerType = 2;
-                    baiduMap.clear();
-                    //构建折线点坐标
-                    LatLng p1 = new LatLng(30.903577, 103.579111);
-                    LatLng p2 = new LatLng(30.905037, 103.574);
-                    LatLng p3 = new LatLng(30.908453, 103.56719);
-
-                    LatLng p4 = new LatLng(30.911509, 103.56437);
-                    LatLng p5 = new LatLng(30.916423, 103.569463);
-                    LatLng p6 = new LatLng(30.914192, 103.567078);
-
-                    LatLng p7 = new LatLng(30.916431, 103.56945);
-                    LatLng p8 = new LatLng(30.907426, 103.57492);
-                    LatLng p9 = new LatLng(30.906253, 103.575006);
-                    LatLng p10 = new LatLng(30.903584, 103.57908);
-                    List<LatLng> points = new ArrayList<LatLng>();
-                    points.add(p1);
-                    points.add(p2);
-                    points.add(p3);
-                    points.add(p4);
-                    points.add(p5);
-                    points.add(p6);
-                    points.add(p7);
-                    points.add(p8);
-                    points.add(p9);
-                    points.add(p10);
-
-                    //设置折线的属性
-                    OverlayOptions mOverlayOptions = new PolylineOptions()
-                            .width(10)
-                            .color(0xAAFF0000)
-                            .points(points);
-                    //在地图上绘制折线
-                    //mPloyline 折线对象
-                    Overlay mPolyline = baiduMap.addOverlay(mOverlayOptions);
-
-                    List<Integer> bitmaps = new ArrayList<Integer>();
-                    bitmaps.add(R.mipmap.marker1);
-                    bitmaps.add(R.mipmap.marker2);
-                    bitmaps.add(R.mipmap.marker3);
-                    bitmaps.add(R.mipmap.marker4);
-                    bitmaps.add(R.mipmap.marker5);
-
-                    bitmaps.add(R.mipmap.marker6);
-                    bitmaps.add(R.mipmap.marker7);
-                    bitmaps.add(R.mipmap.marker8);
-                    bitmaps.add(R.mipmap.marker9);
-                    bitmaps.add(R.mipmap.marker10);
-
-                    for (int i = 0; i < points.size(); i++) {
-                        Bitmap bitmap = null;
-                        bitmap = BitmapFactory.decodeResource(getResources(), bitmaps.get(i));
-                        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(bitmap);
-                        OverlayOptions overlayOptions;
-                        overlayOptions = new MarkerOptions().position(new LatLng(points.get(i).latitude, points.get(i).longitude))
-                                .anchor(100, 100)
-                                .icon(bitmapDescriptor)
-                                .zIndex(5);
-                        overlayOptionsList.add(overlayOptions);
-                        Overlay overlay = baiduMap.addOverlay(overlayOptions);
-                        overlays.add(overlay);
-                    }
-                    zoomToSpan();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            zoomToSpan();
-                        }
-                    }, 800);
-                } else if (checkedId == R.id.rb_shopping) {//购物
-                    markerType = 3;
-                    baiduMap.clear();
-                    shopMarkersListPresenter = new ShopMarkersListPresenter(MapActivity.this);
-                    shopMarkersListPresenter.onCreate();
-                    shopMarkersListPresenter.attachView(shopMarkersView);
-                    shopMarkersListPresenter.getShopList("1");
-                    showProgressDialog();
-                } else if (checkedId == R.id.rb_toilet) {//4
-                    markerType = 4;
-                    baiduMap.clear();
-                    JSONObject requestData = new JSONObject();
-                    try {
-                        requestData.put("sceneryId", 1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestData.toString());
-                    scenerySpotPresenter.getSceneryList(requestBody, 4);
-                    showProgressDialog();
-
+                }, 800);
+            } else if (checkedId == R.id.rb_shopping) {//购物
+                markerType = 3;
+                baiduMap.clear();
+                shopMarkersListPresenter = new ShopMarkersListPresenter(MapActivity.this);
+                shopMarkersListPresenter.onCreate();
+                shopMarkersListPresenter.attachView(shopMarkersView);
+                shopMarkersListPresenter.getShopList("1");
+                showProgressDialog();
+            } else if (checkedId == R.id.rb_toilet) {//4
+                markerType = 4;
+                baiduMap.clear();
+                JSONObject requestData = new JSONObject();
+                try {
+                    requestData.put("sceneryId", 1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), requestData.toString());
+                scenerySpotPresenter.getSceneryList(requestBody, 4);
+                showProgressDialog();
+
             }
         });
 
@@ -472,13 +570,14 @@ public class MapActivity extends BaseActivity {
             public boolean onMarkerClick(final Marker marker) {
                 LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
                 View view = null;
+
                 if (marker.getExtraInfo() == null) {//判空
 
                     return false;
                 }
                 if (markerType == 1) {
                     final ScenerySpotListBean.ListBean listBean = (ScenerySpotListBean.ListBean) marker.getExtraInfo().get("findCarBeen");
-                    Logger.d("mapActivity", "按下" + listBean.toString());
+                    Logger.d("com.guidemachine", "按下" + listBean.toString());
 //                    Bitmap bitmap = null;
 //                    bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_toilet_location_select);
 //                    BitmapDescriptor bitmapDescriptor1 = BitmapDescriptorFactory.fromBitmap(bitmap);
@@ -488,25 +587,34 @@ public class MapActivity extends BaseActivity {
                      如果有已经点过的marker，就把以前的marker还原，checked设为false
                      https://blog.csdn.net/baidu_29512909/article/details/50481169
                      */
-//                    if (checked) {
-//                        previousMarker.setIcon(BitmapDescriptorFactory
-//                                .fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_scene_point)));
-//                        checked = false;
-//                    }
+                    if (checked) {
+                        previousMarker.setIcon(BitmapDescriptorFactory
+                                .fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_scene_point)));
+                        checked = false;
+                    }
                     view = inflater.inflate(R.layout.scene_infowindow, null);
+                    LinearLayout contentLayout = view.findViewById(R.id.content_layout);
+                    //跳转到音频播放界面
+                    contentLayout.setOnClickListener(v -> {
+                        Intent intent = new Intent(MapActivity.this, VoiceExplainAct.class);
+                        intent.putExtra("imageUrl", listBean.getImageUrl().toString());
+                        intent.putExtra("title", listBean.getName().toString());
+                        intent.putExtra("flag", listBean.getScenerySpotId() + "");
+
+                        startActivity(intent);
+//                        IntentUtils.openActivity(MapActivity.this,VoiceExplainAct.class);
+                    });
                     TextView tvName = view.findViewById(R.id.tv_name);
                     tvName.setText(listBean.getName());
                     imgPlayVoice = view.findViewById(R.id.img_play_voice);
-                    if (isPlay == true) {
-                        imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_pause);
-                        imgPlayVoice.setText("暂停");
-                    } else if (isPlay == false) {
-                        imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_play);
-                        imgPlayVoice.setText("播放");
+                    imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_play);
+                    imgPlayVoice.setText("播放");
+                    isPlay = false;
+                    //先提前释放资源
+                    if (mIsPlayId != 0) {
+                        mSoundManager.stopMusic(mIsPlayId);
                     }
-                    imgPlayVoice.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                    imgPlayVoice.setOnClickListener(view1 -> {
 //                            mediaPlayer = new MediaPlayer();
 //                            try {
 //                                mediaPlayer.setDataSource("/mnt/sdcard/a3.mp3");
@@ -515,61 +623,56 @@ public class MapActivity extends BaseActivity {
 //                            } catch (IOException e) {
 //                                e.printStackTrace();
 //                            }
-                            // 此marker已经点过，作为上一次点击的marker
+                        // 此marker已经点过，作为上一次点击的marker
 //                            checked = true;
 //                            previousMarker = marker;
+                        VoiceUtil.getInstance().modeIndicater(MapActivity.this, listBean.getScenerySpotId());
 
-                            VoiceUtil.getInstance().modeIndicater(MapActivity.this, listBean.getScenerySpotId());
+                        Logger.d("com.guidemachine", "点击获取的ID" + listBean.getScenerySpotId());
 
-                            if (isPlay == false) {
-                                isPlay = true;
-                                imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_pause);
-                                imgPlayVoice.setText("暂停");
-                                Logger.d("mapActivity", "暂停" + listBean.getScenerySpotId());
-                                return;
-                            } else if (isPlay == true) {
-                                isPlay = false;
-                                imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_play);
-                                imgPlayVoice.setText("播放");
-                                Logger.d("mapActivity", "播放" + listBean.getScenerySpotId());
-                                return;
+//                        if (listBean.getScenerySpotId()==46){
+//                            mCurrentId = 1;
+//                        }else if (listBean.getScenerySpotId()==45){
+//                            mCurrentId = 2;
+//                        }if (listBean.getScenerySpotId()==18){
+//                            mCurrentId = 3;
+//                        }if (listBean.getScenerySpotId()==17){
+//                            mCurrentId = 4;
+//                        }if (listBean.getScenerySpotId()==3){
+//                            mCurrentId = 5;
+//                        }
+                        if (isPlay == false) {
+                            isPlay = true;
+                            imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_pause);
+                            imgPlayVoice.setText("暂停");
+                            if (listBean.getScenerySpotId() != mTag) {
+                                mIsPlayId = mSoundManager.StartMusic(listBean.getScenerySpotId());
+                            } else {
+                                mSoundManager.resume(mIsPlayId);
                             }
-
-//                            if (listBean.getScenerySpotId()==46){
-//                                SoundManager.getInstence().StartMusic(1);
-//                            }else if (listBean.getScenerySpotId()==45){
-//                                SoundManager.getInstence().StartMusic(2);
-//                            }if (listBean.getScenerySpotId()==18){
-//                                SoundManager.getInstence().StartMusic(3);
-//                            }if (listBean.getScenerySpotId()==17){
-//                                SoundManager.getInstence().StartMusic(4);
-//                            }if (listBean.getScenerySpotId()==3){
-//                                SoundManager.getInstence().StartMusic(5);
-//                            }
-
+                        } else if (isPlay == true) {
+                            isPlay = false;
+                            imgPlayVoice.setBackgroundResource(R.mipmap.ic_scenery_play);
+                            imgPlayVoice.setText("播放");
+                            if (mIsPlayId != 0) {
+                                mSoundManager.pauseMusic(mIsPlayId);
+                            }
                         }
+                        mTag = listBean.getScenerySpotId();
                     });
                     TextView tvSeePic = view.findViewById(R.id.tv_see_pic);
-                    tvSeePic.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (listBean.getImageUrl() != null) {
-                                Intent intent = new Intent(MapActivity.this, SceneAlbumActivity.class);
-                                intent.putExtra("imageUrl", listBean.getImageUrl().toString());
-                                intent.putExtra("title", listBean.getName().toString());
-                                startActivity(intent);
-                            } else {
-                                ToastUtils.msg("该景点没有图片！");
-                            }
+                    tvSeePic.setOnClickListener(view12 -> {
+                        if (listBean.getImageUrl() != null) {
+                            Intent intent = new Intent(MapActivity.this, SceneAlbumActivity.class);
+                            intent.putExtra("imageUrl", listBean.getImageUrl().toString());
+                            intent.putExtra("title", listBean.getName().toString());
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.msg("该景点没有图片！");
                         }
                     });
                     TextView tvPlayVideo = view.findViewById(R.id.tv_play_video);
-                    tvPlayVideo.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            IntentUtils.openActivity(MapActivity.this, VideoPlayerActivity.class, "id", listBean.getScenerySpotId() + "");
-                        }
-                    });
+                    tvPlayVideo.setOnClickListener(view13 -> IntentUtils.openActivity(MapActivity.this, VideoPlayerActivity.class, "id", listBean.getScenerySpotId() + ""));
                     //定义用于显示该InfoWindow的坐标点
                     LatLng pt = new LatLng(listBean.getLat(), listBean.getLng());
                     //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
@@ -670,8 +773,17 @@ public class MapActivity extends BaseActivity {
                 baiduMap.hideInfoWindow();
             }
         });
+        circleCenterList = new ArrayList<>();
+        circleCenterList.add(new LatLng(30.614245, 104.06958));
+        circleCenterList.add(new LatLng(30.612188, 104.072501));
+        circleCenterList.add(new LatLng(30.613617, 104.075304));
+
+        circleCenterList.add(new LatLng(30.61455, 104.069249));
+        circleCenterList.add(new LatLng(30.614627, 104.067434));
+        circleCenterList.add(new LatLng(30.6146, 104.067987));
 
 
+        creatFence(points);
     }
 
 
@@ -730,6 +842,8 @@ public class MapActivity extends BaseActivity {
                 Log.i(TAG, "获取成功的定位" + location.getLatitude() + " " + location.getLongitude());
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
+                mCurrentLocation = location;
+
                 StringBuffer sb = new StringBuffer(256);
                 sb.append("time : ");
                 /**
@@ -811,6 +925,7 @@ public class MapActivity extends BaseActivity {
                 }
 //                logMsg(city);
                 LogUtils.d("定位", sb.toString());
+                Log.d("com.guidemachine", "获取到的海拔" + location.getAltitude());
                 //定义Maker坐标点
 //                LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
 //                //构建Marker图标
@@ -825,6 +940,24 @@ public class MapActivity extends BaseActivity {
 //                        ToastUtils.msg("位置版触发了：" + latLngs.get(i).getVoiceId());
 //                    }
 //                }
+//                ToastUtils.msg("定位到当前坐标："+location.getLatitude()+"=="+location.getLongitude());
+
+                MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
+                        .direction(location.getDirection()).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
+
+                baiduMap.setMyLocationData(locData);
+
+                /**
+                 * 位置板触发
+                 */
+//                for (int i = 0; i < circleCenterList.size(); i++) {
+//                    if (LatUtil.getDistance(circleCenterList.get(i).longitude, circleCenterList.get(i).latitude, location.getLongitude(), location.getLatitude()) < radius) {
+//                        ToastUtils.msg("位置版触发，开始播放第" + i+"段音频讲解");
+//                    }
+//                }
+
+                //声明LocationClient类实例并配置定位参数
+
                 if (isFristLocation) {
                     isFristLocation = false;
                     LatLng cenpt = new LatLng(location.getLatitude(), location.getLongitude());   //①
@@ -835,6 +968,7 @@ public class MapActivity extends BaseActivity {
                             MapStatusUpdateFactory.newMapStatus(mMapStatus);   //③
                     // BaiduMap对象改变地图状态
                     baiduMap.setMapStatus(mMapStatusUpdate);    //④
+
                     //MapView要改变-->用BaiduMap去操作-->根据MapStatus的状态改变-->
                     //  BaiduMap看不懂状态MapStatus  需要MapStatusUpdate去描述-->BaiduMap通过描述去改变-->MapView改变
 
@@ -845,14 +979,15 @@ public class MapActivity extends BaseActivity {
                     //开启交通图
                     //  baiduMap.setTrafficEnabled(true);
                     //定义Maker坐标点
-                    LatLng point1 = new LatLng(location.getLatitude(), location.getLongitude());
+//                    LatLng point1 = new LatLng(location.getLatitude(), location.getLongitude());
 //                    LatLng point = new LatLng(30.758348, 103.98694);
                     //构建Marker图标
-                    BitmapDescriptor bitmap1 = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
-                    // 构建MarkerOption， 用于在地图上添加Marker
-                    OverlayOptions option1 = new MarkerOptions().position(point1).icon(bitmap1);
-                    // 在地图上添加Marker，并显示
-                    baiduMap.addOverlay(option1);
+//                    BitmapDescriptor bitmap1 = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
+//                    // 构建MarkerOption， 用于在地图上添加Marker
+//                    OverlayOptions option1 = new MarkerOptions().position(point1).icon(bitmap1);
+//                    // 在地图上添加Marker，并显示
+//                    baiduMap.addOverlay(option1);
+
                     SPHelper.getInstance(MapActivity.this).setLatitude(location.getLatitude() + "");
                     SPHelper.getInstance(MapActivity.this).setLongitude(location.getLongitude() + "");
                     SPHelper.getInstance(MapActivity.this).setCityName(location.getAddrStr());
@@ -876,47 +1011,49 @@ public class MapActivity extends BaseActivity {
                     scenerySpotPresenter.getSceneryList(requestBody, 1);
                     showProgressDialog();
                 }
-                imgLocation.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        isFristLocation = false;
-                        baiduMap.clear();
-                        LatLng center = new LatLng(location.getLatitude(), location.getLongitude());   //①
-                        // 定义地图状态
-                        MapStatus mMapStatus = new MapStatus.Builder().target(center).zoom(18).build();  //②
-                        // 定义地图状态将要发生的变化
-                        MapStatusUpdate mMapStatusUpdate =
-                                MapStatusUpdateFactory.newMapStatus(mMapStatus);   //③
-                        // BaiduMap对象改变地图状态
-                        baiduMap.setMapStatus(mMapStatusUpdate);    //④
-                        //MapView要改变-->用BaiduMap去操作-->根据MapStatus的状态改变-->
-                        //  BaiduMap看不懂状态MapStatus  需要MapStatusUpdate去描述-->BaiduMap通过描述去改变-->MapView改变
+                imgLocation.setOnClickListener(v -> {
+                    isFristLocation = false;
+                    baiduMap.clear();
+                    LatLng center = new LatLng(location.getLatitude(), location.getLongitude());   //①
+                    // 定义地图状态
+                    MapStatus mMapStatus = new MapStatus.Builder().target(center).zoom(18).build();  //②
+                    // 定义地图状态将要发生的变化
+                    MapStatusUpdate mMapStatusUpdate =
+                            MapStatusUpdateFactory.newMapStatus(mMapStatus);   //③
+                    // BaiduMap对象改变地图状态
+                    baiduMap.setMapStatus(mMapStatusUpdate);    //④
 
-                        //普通地图
-                        //baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-                        //卫星地图
-                        // mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
-                        //开启交通图
-                        //baiduMap.setTrafficEnabled(true);
-                        //定义Maker坐标点
-                        LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
-                        //构建Marker图标
-                        BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
-                        // 构建MarkerOption， 用于在地图上添加Marker
-                        OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
-                        // 在地图上添加Marker，并显示
-                        baiduMap.addOverlay(option);
+//                    MyLocationData locData = new MyLocationData.Builder().accuracy(location.getRadius())
+//                            .direction(location.getDirection()).latitude(location.getLatitude()).longitude(location.getLongitude()).build();
+//                    baiduMap.setMyLocationData(locData);
+
+                    //MapView要改变-->用BaiduMap去操作-->根据MapStatus的状态改变-->
+                    //  BaiduMap看不懂状态MapStatus  需要MapStatusUpdate去描述-->BaiduMap通过描述去改变-->MapView改变
+
+                    //普通地图
+                    //baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                    //卫星地图
+                    // mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                    //开启交通图
+                    //baiduMap.setTrafficEnabled(true);
+                    //定义Maker坐标点
+//                    LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+//                    //构建Marker图标
+//                    BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
+//                    // 构建MarkerOption， 用于在地图上添加Marker
+//                    OverlayOptions option = new MarkerOptions().position(point).icon(bitmap);
+//                    // 在地图上添加Marker，并显示
+//                    baiduMap.addOverlay(option);
 
 
-//                        JSONObject requestFenceData = new JSONObject();
-//                        try {
-//                            requestFenceData.put("imei", getIMEI(MapActivity.this));
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        RequestBody requestFenceBody = RequestBody.create(MediaType.parse("application/json"), requestFenceData.toString());
-//                        fencePresenter.getFence(requestFenceBody);
+                    JSONObject requestFenceData = new JSONObject();
+                    try {
+                        requestFenceData.put("imei", getIMEI(MapActivity.this));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+                    RequestBody requestFenceBody = RequestBody.create(MediaType.parse("application/json"), requestFenceData.toString());
+                    fencePresenter.getFence(requestFenceBody);
                 });
 
             }
@@ -931,7 +1068,7 @@ public class MapActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         // activity 暂停时同时暂停地图控件
-        mapView.onPause();
+//        mapView.onPause();
     }
 
     @Override
@@ -945,9 +1082,25 @@ public class MapActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         // activity 销毁时同时销毁地图控件
-        MapView.setMapCustomEnable(false);
-        mapView.onDestroy();
+//        MapView.setMapCustomEnable(false);
+//        mapView.onDestroy();
+//        locationService.stop();
+        isPlaying = false;
         EventBus.getDefault().unregister(this);
+        mSoundManager.release();
+        L.gi().d("进入onDestroy播放监听==========");
+        if (serialPortUtils != null){
+            serialPortUtils.closeSerialPort();
+        }
+        if (player != null) {
+            L.gi().d("进入停止播放监听==========");
+            player.stop();
+            player.reset();
+            player = null;
+        }
+        handler.removeMessages(100);
+
+
     }
 
     /**
@@ -987,7 +1140,7 @@ public class MapActivity extends BaseActivity {
     public synchronized Marker setMark(final LatLng latLng, final int id) {
 
         baiduMap.hideInfoWindow();
-        Log.v("pcw", "setMarker : lat : " + latLng.latitude + " lon : " + latLng.longitude);
+        L.gi().d("setMarker : lat : " + latLng.latitude + " lon : " + latLng.longitude);
         Bitmap bitmap = null;
         if (id == 1) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_scenery_marker1);
@@ -1016,13 +1169,13 @@ public class MapActivity extends BaseActivity {
 
 
         //定义Maker坐标点
-        LatLng point = new LatLng(Double.parseDouble(SPHelper.getInstance(MapActivity.this).getLatitude()), Double.parseDouble(SPHelper.getInstance(MapActivity.this).getLongitude()));
-        //构建Marker图标
-        BitmapDescriptor userBitmap = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
-        // 构建MarkerOption， 用于在地图上添加Marker
-        OverlayOptions option = new MarkerOptions().position(point).icon(userBitmap);
-        // 在地图上添加Marker，并显示
-        baiduMap.addOverlay(option);
+//        LatLng point = new LatLng(Double.parseDouble(SPHelper.getInstance(MapActivity.this).getLatitude()), Double.parseDouble(SPHelper.getInstance(MapActivity.this).getLongitude()));
+//        //构建Marker图标
+//        BitmapDescriptor userBitmap = BitmapDescriptorFactory.fromResource(R.mipmap.ic_user_location);
+//        // 构建MarkerOption， 用于在地图上添加Marker
+//        OverlayOptions option = new MarkerOptions().position(point).icon(userBitmap);
+//        // 在地图上添加Marker，并显示
+//        baiduMap.addOverlay(option);
 
         return (Marker) overlay;
     }
@@ -1049,6 +1202,7 @@ public class MapActivity extends BaseActivity {
     WeatherView weatherView = new WeatherView() {
         @Override
         public void onSuccess(BaseBean<WeatherBean> mWeatherBean) {
+            Log.d("com.guidemachine", "获取天气=======================");
             Logger.d("ScenerySpotListBean", mWeatherBean.getValue().toString());
             tvTemperature.setText(mWeatherBean.getValue().getTemperature());
         }
@@ -1081,6 +1235,7 @@ public class MapActivity extends BaseActivity {
     FenceView fenceView = new FenceView() {
         @Override
         public void onSuccess(BaseBean<List<FenceBean>> mFenceBean) {
+            Log.d("com.guidemachine获取的电子围栏", mFenceBean.getValue() + "");
             if (mFenceBean.getValue().size() == 0) {
                 return;
             }
@@ -1093,6 +1248,7 @@ public class MapActivity extends BaseActivity {
                 Logger.d("电子围栏", res);
 //                locationFenceList1.add(res);
                 String[] strings = res.split("_");
+                Log.d("com.guidemachine获取的电子围栏", res);
                 points.add(new LatLng(Double.parseDouble(strings[1]), Double.parseDouble(strings[0])));
             }
             //再次添加经纬度第一个点作为最后一个点，实现首尾相接
@@ -1156,15 +1312,12 @@ public class MapActivity extends BaseActivity {
         pd.setCanceledOnTouchOutside(false);
         pd.show();
         DemoHelper.getInstance().logout(true, new EMCallBack() {
-
             @Override
             public void onSuccess() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        pd.dismiss();
-                        // show login screen
-                        Log.d("TalkFragment", "退出环信成功");
-                    }
+                runOnUiThread(() -> {
+                    pd.dismiss();
+                    // show login screen
+                    Log.d("TalkFragment", "退出环信成功");
                 });
             }
 
@@ -1173,21 +1326,15 @@ public class MapActivity extends BaseActivity {
                 if (progress == 100) {
                     System.exit(0);
                     Log.d("TalkFragment", "退出环信成功" + progress);
-
                 }
-
             }
 
             @Override
             public void onError(int code, String message) {
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        pd.dismiss();
-                        Toast.makeText(MapActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
-                    }
+                runOnUiThread(() -> {
+                    // TODO Auto-generated method stub
+                    pd.dismiss();
+                    Toast.makeText(MapActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -1277,6 +1424,38 @@ public class MapActivity extends BaseActivity {
          * 创建服务端圆形围栏
          * 参数与客户端圆形围栏一样
          */
+
+        /**
+         * 创建位置板
+         */
+        CreateFenceRequest request = null;
+//        //当前麦田中心
+//        request = CreateFenceRequest.buildLocalCircleRequest(1, Constants.serviceId, "test",
+//                "myTrace", new com.baidu.trace.model.LatLng(30.614192, 104.069563), radius, denoise, CoordType.bd09ll);
+//        mClient.createFence(request, fenceListener);
+//        //桂溪南站加油站
+//        request = CreateFenceRequest.buildLocalCircleRequest(2, Constants.serviceId, "test2",
+//                "myTrace2", new com.baidu.trace.model.LatLng(30.614507, 104.066662), radius, denoise, CoordType.bd09ll);
+//        mClient.createFence(request, fenceListener);
+//        //凯宴美湖
+//        request = CreateFenceRequest.buildLocalCircleRequest(3, Constants.serviceId, "test3",
+//                "myTrace3", new com.baidu.trace.model.LatLng(30.614468, 104.068364), radius, denoise, CoordType.bd09ll);
+//        mClient.createFence(request, fenceListener);
+//
+//        //凯宴美湖
+//        request = CreateFenceRequest.buildLocalCircleRequest(3, Constants.serviceId, "test4",
+//                "myTrace4", new com.baidu.trace.model.LatLng(30.61455, 104.069249), radius, denoise, CoordType.bd09ll);
+//        mClient.createFence(request, fenceListener);
+//        //凯宴美湖
+//        request = CreateFenceRequest.buildLocalCircleRequest(3, Constants.serviceId, "test5",
+//                "myTrace5", new com.baidu.trace.model.LatLng(30.614627, 104.067434), radius, denoise, CoordType.bd09ll);
+//        mClient.createFence(request, fenceListener);
+//        //凯宴美湖
+//        request = CreateFenceRequest.buildLocalCircleRequest(3, Constants.serviceId, "test6",
+//                "myTrace6", new com.baidu.trace.model.LatLng(30.6146, 104.067987), radius, denoise, CoordType.bd09ll);
+//        mClient.createFence(request, fenceListener);
+
+
 //        CreateFenceRequest  request1 = CreateFenceRequest.buildServerCircleRequest(1, Constants.serviceId, "tome",
 //                entityName, new com.baidu.trace.model.LatLng(30.614226, 104.069596), 10, 30, CoordType.bd09ll);
 
@@ -1304,9 +1483,10 @@ public class MapActivity extends BaseActivity {
          * 顶点可设置地图点击监听获取，mBaiduMap.setOnMapClickListener
          * 围栏的创建不是所有地区都会成功，服务端会判断当前那个位置是不是时候生成围栏（保证围栏的精度也是可靠的），你可以选一个周边的点再试试
          */
-        CreateFenceRequest request = CreateFenceRequest.buildServerPolygonRequest(11, Constants.serviceId, "tome",
+        request = CreateFenceRequest.buildServerPolygonRequest(11, Constants.serviceId, "tome",
                 entityName, vertexes, 30, CoordType.bd09ll);
-
+        //发起创建围栏请求
+        mClient.createFence(request, fenceListener);
         /**
          * 创建服务端线形围栏
          * vertexes - 顶点坐标集合，List<com.baidu.trace.model.LatLng>
@@ -1326,8 +1506,6 @@ public class MapActivity extends BaseActivity {
 //                vertexes,"服务端围栏");
 //        mClient.deleteFence(deleteFenceRequest,fenceListener);//创建之前先删除一下
 
-        //发起创建围栏请求
-        mClient.createFence(request, fenceListener);
 
     }
 
@@ -1337,7 +1515,7 @@ public class MapActivity extends BaseActivity {
         public void onCreateFenceCallback(CreateFenceResponse response) {
             //创建围栏响应结果,能获取围栏的一些信息
             if (StatusCodes.SUCCESS != response.getStatus()) {
-                ToastUtils.msg("地理围栏:" + response.message);
+//                ToastUtils.msg("地理围栏:" + response.message);
                 return;
             }
             response.getTag();//请求标识
@@ -1346,7 +1524,16 @@ public class MapActivity extends BaseActivity {
             response.getFenceShape();//围栏形状
             response.getFenceType();//围栏类型（本地围栏、服务端围栏）
             //...方法不一一列举了，比较简单
-            ToastUtils.msg("地理围栏:" + response.message);
+//            ToastUtils.msg("地理围栏:" + response.message);
+
+            Stroke stroke;
+            stroke = new Stroke(5, Color.rgb(0x23, 0x19, 0xDC));
+            for (com.baidu.mapapi.model.LatLng latLng : circleCenterList) {
+                overlayOptions = new CircleOptions().fillColor(0x000000FF).center(latLng)
+                        .stroke(stroke).zIndex(1).radius((int) radius);
+                currentOverlay = baiduMap.addOverlay(overlayOptions);//画圆
+            }
+
             //画圆，主要是这里
 //            OverlayOptions ooCircle = new CircleOptions().fillColor(0x384d73b3)
 //                    .center(new LatLng(30.614226, 104.069596)).stroke(new Stroke(3, 0x784d73b3))
@@ -1517,7 +1704,7 @@ public class MapActivity extends BaseActivity {
 
     public List<LocalLocationBean> getLocalLocations() {//获取位置版触发经纬度
         com.alibaba.fastjson.JSONObject jsonData =
-                com.alibaba.fastjson.JSONObject.parseObject(FileUtils.readAssetsTxt(MapActivity.this, "SpeechFile"));
+                com.alibaba.fastjson.JSONObject.parseObject(FileUtil.readAssetsTxt(MapActivity.this, "SpeechFile"));
         List<String> list = new ArrayList<>();
         list.add(jsonData.get("content").toString());
         Logger.d("jsonData", list.toString());
@@ -1540,4 +1727,29 @@ public class MapActivity extends BaseActivity {
 
         return locationLists;
     }
+
+    @SuppressLint("HandlerLeak")
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 100:
+//                    Toast.makeText(MapActivity.this, "获取到信号强度：" + mSigal, Toast.LENGTH_SHORT).show();
+                    if(isPlaying){
+                        if (player != null) {
+                            if(!player.isPlaying()){
+                                player.start();
+                            }
+                            L.gi().d(player.isPlaying() + "==================");
+                        }else{
+                            player = MediaPlayer.create(MapActivity.this, R.raw.voice1);
+                            player.start();
+                        }
+                    }
+                    break;
+            }
+        }
+    };
+
 }

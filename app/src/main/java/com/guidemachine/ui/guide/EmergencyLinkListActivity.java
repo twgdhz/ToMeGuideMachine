@@ -114,32 +114,26 @@ public class EmergencyLinkListActivity extends BaseActivity {
                 }
             };
             ryLinkList.setAdapter(adapter);
-            adapter.setOnRecyclerItemClickListener(new OnRecyclerItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    Intent intent = new Intent(EmergencyLinkListActivity.this, EmergencyContactActivity.class);
-                    intent.putExtra("name", mFenceBeanList.getValue().get(position).getName());
-                    intent.putExtra("phone", mFenceBeanList.getValue().get(position).getPhone());
-                    intent.putExtra("orderNumber", mFenceBeanList.getValue().get(position).getOrderNumber() + "");
-                    intent.putExtra("type", "1");
-                    startActivity(intent);
-                }
+            adapter.setOnRecyclerItemClickListener((view, position) -> {
+                Intent intent = new Intent(EmergencyLinkListActivity.this, EmergencyContactActivity.class);
+                intent.putExtra("name", mFenceBeanList.getValue().get(position).getName());
+                intent.putExtra("phone", mFenceBeanList.getValue().get(position).getPhone());
+                intent.putExtra("orderNumber", mFenceBeanList.getValue().get(position).getOrderNumber() + "");
+                intent.putExtra("type", "1");
+                startActivity(intent);
             });
 
-            tvComplete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(EmergencyLinkListActivity.this, EmergencyContactActivity.class);
-                    intent.putExtra("type", "2");
-                    if (list.size()==0){
-                        intent.putExtra("orderNumber", "1");
-                    }else  if (list.size()==1){
-                        intent.putExtra("orderNumber", "2");
-                    }else  if (list.size()==2){
-                        intent.putExtra("orderNumber", "3");
-                    }
-                    startActivity(intent);
+            tvComplete.setOnClickListener(view -> {
+                Intent intent = new Intent(EmergencyLinkListActivity.this, EmergencyContactActivity.class);
+                intent.putExtra("type", "2");
+                if (list.size()==0){
+                    intent.putExtra("orderNumber", "1");
+                }else  if (list.size()==1){
+                    intent.putExtra("orderNumber", "2");
+                }else  if (list.size()==2){
+                    intent.putExtra("orderNumber", "3");
                 }
+                startActivity(intent);
             });
         }
 

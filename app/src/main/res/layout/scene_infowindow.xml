@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/content_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@mipmap/ic_bubble"
@@ -34,39 +35,40 @@
                 android:layout_height="wrap_content"
                 android:text="薛涛纪念馆"
                 android:textColor="#333333"
-                android:textSize="12dp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/img_play_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_5dp"
+                android:layout_width="65dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="25dp"
                 android:background="@mipmap/ic_scenery_play"
-                android:paddingLeft="@dimen/adaptive_16dp"
-                android:textSize="@dimen/home_page_txt_12"
+                android:paddingLeft="@dimen/adaptive_27dp"
+                android:gravity="center_vertical"
+                android:textSize="13sp"
                 android:text="播放" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_5dp"
-            android:layout_marginTop="@dimen/margin_5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/margin_5dp">
+            android:paddingBottom="10dp">
 
             <TextView
                 android:id="@+id/tv_see_pic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="65dp"
+                android:layout_height="25dp"
                 android:background="@mipmap/ic_see_pic"
                 android:textSize="12dp" />
 
             <TextView
                 android:id="@+id/tv_play_video"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_top"
+                android:layout_width="65dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="25dp"
                 android:background="@mipmap/ic_play_video"
                 android:textSize="12dp" />
         </LinearLayout>

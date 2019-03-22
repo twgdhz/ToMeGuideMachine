@@ -222,4 +222,7 @@
     <color name="text_color60">#cfcfcf</color>
     <color name="text_color61">#fa7b05</color>
     <color name="text_color62">#87abff</color>
+    <color name="text_color63">#F3BAAF</color>
+
+    <color name="transparent_back">#30000000</color>
 </resources>

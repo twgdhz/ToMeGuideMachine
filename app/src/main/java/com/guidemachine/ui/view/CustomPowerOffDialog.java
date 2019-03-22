@@ -61,15 +61,27 @@ public class CustomPowerOffDialog extends Dialog {
                 dismiss();
             }
         });
+//        btnEnsure.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (clearCache != null) {
+//                    clearCache.clear();
+//                }
+//                dismiss();
+//            }
+//        });
+    }
+
+    public CustomPowerOffDialog setOffButton(final View.OnClickListener listener) {
+
         btnEnsure.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (clearCache != null) {
-                    clearCache.clear();
-                }
+            public void onClick(View v) {
+                listener.onClick(v);
                 dismiss();
             }
         });
+        return this;
     }
 
 
